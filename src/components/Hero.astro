@@ -1,0 +1,155 @@
+---
+/**
+ * Composed like a hanging scroll (kakemono): a title mark near the top,
+ * a deliberately empty field (ma, 間), and the signature resting low —
+ * rather than a headline sized to dominate the viewport.
+ *
+ * Three additions keep the field from reading as merely unfinished:
+ * - a near-invisible grain so the empty space has material, not just color
+ * - a cursor halo that gives the field a quiet, ambient presence
+ * - a vertical line (tategaki-style) as a second, smaller accent
+ */
+
+// Resolved at build time, not in the browser — a static site has no
+// other clock to read from, and this only needs to be right as of the
+// last deploy.
+const year = new Date().getFullYear();
+---
+
+<!--
+  `bg-paper` here isn't decorative — `isolate` walls this section off into
+  its own stacking context, so [data-hero-grain]'s mix-blend-overlay has
+  nothing to blend against unless the section supplies its own backdrop.
+  Remove this background and the grain silently goes fully invisible.
+-->
+<section
+  class="relative isolate flex min-h-svh flex-col gap-[clamp(1.5rem,5vh,3rem)] overflow-hidden bg-paper px-[clamp(1.25rem,6vw,4.5rem)] py-[clamp(1.25rem,4vw,3rem)]"
+  data-hero
+  aria-label="Introduction"
+>
+  <!-- Grain: decorative texture only, never announces itself -->
+  <div
+    class="pointer-events-none absolute inset-0 -z-10 opacity-[0.045] mix-blend-overlay"
+    data-hero-grain
+    aria-hidden="true"
+  ></div>
+
+  <!-- Cursor halo: ambient presence in the empty field, desktop pointers only -->
+  <div
+    class="pointer-events-none absolute top-0 left-0 -z-10 -mt-[13rem] -ml-[13rem] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,var(--color-accent)_0%,transparent_70%)] opacity-0 blur-3xl"
+    data-hero-halo
+    aria-hidden="true"
+  ></div>
+
+  <div class="flex max-w-[22rem] flex-col gap-3">
+    <span
+      class="block h-px w-full origin-left bg-line"
+      data-reveal-line
+      aria-hidden="true"
+    ></span>
+    <p
+      class="m-0 text-xs font-normal tracking-[0.28em] text-ink-soft uppercase"
+      data-reveal
+      data-hero-eyebrow
+    >
+      Portfolio {year}
+    </p>
+  </div>
+
+  <!--
+    Right-side counter-mark to the eyebrow block: same rule + label anatomy,
+    rotated — so the void has two quiet anchors (top-left, right-center)
+    instead of one mark and one orphaned kanji.
+    "一期一会" (ichigo ichie) — a tea-ceremony phrase: treat this encounter as
+    unrepeatable. Purely decorative here, so it stays out of the a11y tree;
+    swap the phrase for anything you actually want to say if you'd rather.
+  -->
+  <div
+    class="pointer-events-none absolute top-1/2 right-[clamp(1rem,4vw,3rem)] hidden -translate-y-1/2 items-center gap-3 sm:flex"
+    data-hero-vertical
+    aria-hidden="true"
+  >
+    <span class="block h-16 w-px origin-top bg-line" data-reveal-line-vertical></span>
+    <span
+      class="block [writing-mode:vertical-rl] text-[0.85rem] tracking-[0.1em] text-ink-soft"
+      data-reveal
+      data-hero-vertical-text
+      lang="ja"
+    >
+      一期一会
+    </span>
+  </div>
+
+  <div class="mt-auto max-w-3xl">
+    <h1
+      class="m-0 text-[clamp(2.75rem,8vw,6rem)] leading-[1.05] font-light tracking-[-0.01em] text-ink"
+      data-hero-name
+    >
+      Tom B.
+    </h1>
+
+    <p
+      class="mt-[0.9rem] mb-0 text-[clamp(1rem,1.6vw,1.25rem)] font-normal text-ink-soft"
+      data-reveal
+      data-hero-role
+    >
+      Développeur &amp; designer
+    </p>
+  </div>
+
+  <div
+    class="self-center max-[30rem]:self-start"
+    data-reveal
+    data-hero-scroll
+    aria-hidden="true"
+  >
+    <span class="relative block h-10 w-px bg-line">
+      <span
+        class="absolute top-0 left-1/2 -ml-[2px] h-[5px] w-[5px] rounded-full bg-accent"
+        data-hero-scroll-dot
+      ></span>
+    </span>
+  </div>
+</section>
+
+<script>
+  import "../scripts/hero";
+</script>
+
+<style>
+  /* Fractal-noise grain, subtly drifting like film grain rather than static */
+  [data-hero-grain] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+    animation: hero-grain-flicker 1s steps(4) infinite;
+  }
+
+  @keyframes hero-grain-flicker {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    25% {
+      transform: translate3d(-2%, 1%, 0);
+    }
+    50% {
+      transform: translate3d(1%, -2%, 0);
+    }
+    75% {
+      transform: translate3d(-1%, 2%, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-grain] {
+      animation: none;
+    }
+  }
+
+  /* Belt-and-braces alongside the JS check: no halo without a real pointer */
+  @media (hover: none), (pointer: coarse) {
+    [data-hero-halo] {
+      display: none;
+    }
+  }
+</style>

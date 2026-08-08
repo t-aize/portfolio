@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Lint, type-check & build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install pnpm, Node.js & dependencies
+        uses: pnpm/setup@v2
+        with:
+          runtime: node@22
+          cache: true
+
+      - name: Biome (format, lint, assist)
+        run: pnpm run ci
+
+      - name: Astro type-check
+        run: pnpm run typecheck
+
+      - name: Build
+        run: pnpm run build

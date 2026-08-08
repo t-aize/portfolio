@@ -1,0 +1,78 @@
+# https://git-scm.com/docs/gitattributes
+#
+# Normalize line endings to LF in the repo/working tree on every platform.
+# Windows contributors keep CRLF locally only for the few types that need it.
+* text=auto eol=lf
+
+# ------------------------------------------------------------------
+# Source code
+# ------------------------------------------------------------------
+*.astro   text eol=lf
+*.ts      text eol=lf
+*.tsx     text eol=lf
+*.js      text eol=lf
+*.jsx     text eol=lf
+*.mjs     text eol=lf
+*.cjs     text eol=lf
+*.css     text eol=lf
+*.scss    text eol=lf
+*.html    text eol=lf
+*.json    text eol=lf
+*.jsonc   text eol=lf
+*.md      text eol=lf diff=markdown
+*.mdx     text eol=lf diff=markdown
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.svg     text eol=lf
+*.txt     text eol=lf
+
+# Windows-only scripts keep CRLF
+*.bat     text eol=crlf
+*.cmd     text eol=crlf
+*.ps1     text eol=crlf
+
+# Shell scripts must stay LF even when checked out on Windows
+*.sh      text eol=lf
+
+# ------------------------------------------------------------------
+# Binary / generated assets — never diffed as text, never EOL-converted
+# ------------------------------------------------------------------
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.webp    binary
+*.avif    binary
+*.ico     binary
+*.pdf     binary
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.otf     binary
+*.eot     binary
+*.mp4     binary
+*.webm    binary
+*.mov     binary
+*.zip     binary
+
+# ------------------------------------------------------------------
+# Lockfiles: keep out of language-stats/diff noise, never manually merge
+# ------------------------------------------------------------------
+pnpm-lock.yaml -diff -merge linguist-generated=true linguist-language=YAML
+
+# ------------------------------------------------------------------
+# GitHub Linguist: exclude generated/build output from repo language stats
+# ------------------------------------------------------------------
+dist/**       linguist-generated=true -diff
+.astro/**     linguist-generated=true -diff
+
+# ------------------------------------------------------------------
+# Files excluded from `git archive` exports (release tarballs, etc.)
+# ------------------------------------------------------------------
+.github/       export-ignore
+.husky/        export-ignore
+.vscode/       export-ignore
+.zed/          export-ignore
+.gitattributes export-ignore
+.gitignore     export-ignore
+.editorconfig  export-ignore

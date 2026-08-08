@@ -1,0 +1,69 @@
+@import "@fontsource/zen-kaku-gothic-new/latin-300.css";
+@import "@fontsource/zen-kaku-gothic-new/latin-ext-300.css";
+@import "@fontsource/zen-kaku-gothic-new/latin-400.css";
+@import "@fontsource/zen-kaku-gothic-new/latin-ext-400.css";
+@import "@fontsource/zen-kaku-gothic-new/japanese-400.css";
+@import "tailwindcss";
+
+@theme {
+  /* washi paper / sumi ink — see Hero.astro for the rationale */
+  --color-paper: #edeae2;
+  --color-ink: #1c1b17;
+  --color-ink-soft: #5e5a4f;
+  --color-line: #d2ccc0;
+  --color-accent: #8b3a2b;
+
+  --font-sans:
+    "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui,
+    sans-serif;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--color-paper);
+    color-scheme: light;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  /*
+   * Elements a script reveals on load stay hidden only once we know JS is
+   * actually running — otherwise a blocked/failed script would leave the
+   * hero permanently invisible instead of degrading to a static page.
+   */
+  html.js [data-reveal] {
+    opacity: 0;
+  }
+
+  html.js [data-reveal-line] {
+    transform: scaleX(0);
+  }
+
+  html.js [data-reveal-line-vertical] {
+    transform: scaleY(0);
+  }
+}
