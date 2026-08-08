@@ -62,6 +62,11 @@ html {
   html {
     background: var(--color-paper);
     color-scheme: light;
+    /* The hero halo intentionally bleeds past its section's edges (see
+       Hero.astro) instead of being clipped by an overflow-hidden box —
+       this is the safety net that stops that bleed from ever widening
+       the page horizontally. */
+    overflow-x: hidden;
   }
 
   body {

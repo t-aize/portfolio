@@ -4,8 +4,7 @@
  * a deliberately empty field (ma, 間), and the signature resting low —
  * rather than a headline sized to dominate the viewport.
  *
- * Three additions keep the field from reading as merely unfinished:
- * - a near-invisible grain so the empty space has material, not just color
+ * Two additions keep the field from reading as merely unfinished:
  * - a cursor halo that gives the field a quiet, ambient presence
  * - a vertical line (tategaki-style) as a second, smaller accent
  */
@@ -16,24 +15,12 @@
 const year = new Date().getFullYear();
 ---
 
-<!--
-  `bg-paper` here isn't decorative — `isolate` walls this section off into
-  its own stacking context, so [data-hero-grain]'s mix-blend-overlay has
-  nothing to blend against unless the section supplies its own backdrop.
-  Remove this background and the grain silently goes fully invisible.
--->
+<!-- `isolate` keeps the halo's negative z-index contained to this section -->
 <section
-  class="relative isolate flex min-h-svh flex-col gap-[clamp(1.5rem,5vh,3rem)] overflow-hidden bg-paper px-[clamp(1.25rem,6vw,4.5rem)] py-[clamp(1.25rem,4vw,3rem)]"
+  class="relative isolate flex min-h-svh flex-col gap-[clamp(1.5rem,5vh,3rem)] bg-paper px-[clamp(1.25rem,6vw,4.5rem)] py-[clamp(1.25rem,4vw,3rem)]"
   data-hero
   aria-label="Introduction"
 >
-  <!-- Grain: decorative texture only, never announces itself -->
-  <div
-    class="pointer-events-none absolute inset-0 -z-10 opacity-[0.045] mix-blend-overlay"
-    data-hero-grain
-    aria-hidden="true"
-  ></div>
-
   <!-- Cursor halo: ambient presence in the empty field, desktop pointers only -->
   <div
     class="pointer-events-none absolute top-0 left-0 -z-10 -mt-[13rem] -ml-[13rem] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,var(--color-accent)_0%,transparent_70%)] opacity-0 blur-3xl"
@@ -89,27 +76,15 @@ const year = new Date().getFullYear();
     </h1>
 
     <p
-      class="mt-[0.9rem] mb-0 text-[clamp(1rem,1.6vw,1.25rem)] font-normal text-ink-soft"
+      class="mt-[0.9rem] mb-0 text-sm font-normal tracking-[0.28em] text-ink-soft uppercase"
       data-reveal
       data-hero-role
     >
-      Développeur &amp; designer
+      Développeur &middot; Designer
     </p>
   </div>
 
-  <div
-    class="self-center max-[30rem]:self-start"
-    data-reveal
-    data-hero-scroll
-    aria-hidden="true"
-  >
-    <span class="relative block h-10 w-px bg-line">
-      <span
-        class="absolute top-0 left-1/2 -ml-[2px] h-[5px] w-[5px] rounded-full bg-accent"
-        data-hero-scroll-dot
-      ></span>
-    </span>
-  </div>
+  <div class="h-10" aria-hidden="true"></div>
 </section>
 
 <script>
@@ -117,35 +92,6 @@ const year = new Date().getFullYear();
 </script>
 
 <style>
-  /* Fractal-noise grain, subtly drifting like film grain rather than static */
-  [data-hero-grain] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 160px 160px;
-    animation: hero-grain-flicker 1s steps(4) infinite;
-  }
-
-  @keyframes hero-grain-flicker {
-    0%,
-    100% {
-      transform: translate3d(0, 0, 0);
-    }
-    25% {
-      transform: translate3d(-2%, 1%, 0);
-    }
-    50% {
-      transform: translate3d(1%, -2%, 0);
-    }
-    75% {
-      transform: translate3d(-1%, 2%, 0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-hero-grain] {
-      animation: none;
-    }
-  }
-
   /* Belt-and-braces alongside the JS check: no halo without a real pointer */
   @media (hover: none), (pointer: coarse) {
     [data-hero-halo] {

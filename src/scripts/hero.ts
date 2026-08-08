@@ -12,8 +12,6 @@ if (hero) {
   const role = hero.querySelector<HTMLElement>("[data-hero-role]");
   const verticalLine = hero.querySelector<HTMLElement>("[data-reveal-line-vertical]");
   const verticalText = hero.querySelector<HTMLElement>("[data-hero-vertical-text]");
-  const scrollCue = hero.querySelector<HTMLElement>("[data-hero-scroll]");
-  const scrollDot = hero.querySelector<HTMLElement>("[data-hero-scroll-dot]");
   const halo = hero.querySelector<HTMLElement>("[data-hero-halo]");
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -27,7 +25,7 @@ if (hero) {
     // final values explicitly instead so they actually override it.
     if (line) gsap.set(line, { scaleX: 1 });
     if (verticalLine) gsap.set(verticalLine, { scaleY: 1 });
-    gsap.set([eyebrow, role, verticalText, scrollCue].filter(Boolean), { opacity: 1 });
+    gsap.set([eyebrow, role, verticalText].filter(Boolean), { opacity: 1 });
     if (split) gsap.set(split.words, { opacity: 1, yPercent: 0 });
   } else {
     const tl = gsap.timeline({ delay: 0.2, defaults: { ease: "power3.out" } });
@@ -66,19 +64,6 @@ if (hero) {
 
     if (verticalText) {
       tl.fromTo(verticalText, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.6 }, "-=0.5");
-    }
-
-    tl.fromTo(scrollCue, { opacity: 0 }, { opacity: 1, duration: 0.8 }, "-=0.2");
-
-    if (scrollDot) {
-      gsap.to(scrollDot, {
-        y: 14,
-        repeat: -1,
-        yoyo: true,
-        duration: 1.6,
-        ease: "sine.inOut",
-        delay: tl.duration() + 0.4,
-      });
     }
   }
 
