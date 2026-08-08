@@ -1,0 +1,72 @@
+---
+/**
+ * Where the hero's silence resolves. Same restraint in type and color —
+ * still light type, still bg-line dividers, still text-ink-soft for
+ * secondary text — but the rhythm flips: dense rows instead of one word.
+ *
+ * Images are intentionally left out for now (no assets yet, and the
+ * cursor-tracking preview that would reveal them on hover isn't wired up
+ * yet either) — this is the text-only skeleton the imagery will land on
+ * later.
+ */
+
+interface Project {
+  title: string;
+  category: string;
+  year: string;
+  image: string;
+}
+
+const projects: Project[] = [
+  { title: "Projet Un", category: "Identité — Web", year: "2026", image: "/images/projects/01.jpg" },
+  { title: "Projet Deux", category: "Produit — App", year: "2025", image: "/images/projects/02.jpg" },
+  { title: "Projet Trois", category: "Éditorial", year: "2025", image: "/images/projects/03.jpg" },
+  { title: "Projet Quatre", category: "Marque — Motion", year: "2024", image: "/images/projects/04.jpg" },
+];
+---
+
+<section
+  class="relative px-[clamp(1.25rem,6vw,4.5rem)] py-[clamp(3rem,10vh,6rem)]"
+  aria-label="Travaux sélectionnés"
+>
+  <p class="m-0 mb-10 text-xs font-normal tracking-[0.28em] text-ink-soft uppercase sm:mb-16">
+    Travaux sélectionnés — {String(projects.length).padStart(2, "0")}
+  </p>
+
+  <ul class="m-0 list-none border-b border-line/60 p-0" data-project-list>
+    {
+      projects.map((project, index) => (
+        <li class="border-t border-line/60" data-reveal data-project-row>
+          <a
+            href={`/travaux/${index + 1}`}
+            class="group flex items-center gap-4 py-6 sm:gap-8 sm:py-8"
+          >
+            <span class="text-xs text-ink-soft tabular-nums" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+
+            <span class="min-w-0 flex-1">
+              <span class="block truncate text-[clamp(1.5rem,4.5vw,3rem)] leading-[1.1] font-light tracking-[-0.01em] text-ink transition-colors duration-300 group-hover:text-accent">
+                {project.title}
+              </span>
+              <span class="mt-1 block text-sm text-ink-soft">
+                {project.category} — {project.year}
+              </span>
+            </span>
+
+            <span
+              class="hidden shrink-0 text-ink-soft transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent sm:block"
+              aria-hidden="true"
+            >
+              →
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<script>
+  import "../scripts/work";
+</script>
