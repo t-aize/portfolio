@@ -5,6 +5,40 @@
 @import "@fontsource/zen-kaku-gothic-new/japanese-400.css";
 @import "tailwindcss";
 
+/*
+ * Restyled, not removed — a hidden scrollbar removes the one visual cue
+ * that says "there's more below," which works against the site's own use
+ * of empty space. Kept thin and low-contrast so it reads as texture, not
+ * chrome. Lenis wraps the native scrollbar rather than replacing it, so
+ * these rules apply normally with no extra wiring.
+ */
+
+html {
+  /* Firefox: thumb color, then track color */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-line);
+  border-radius: 999px;
+  /* Creates the "thin" look while keeping a full 10px hit target for
+     dragging — shrinking the box itself would shrink the target too. */
+  border: 3px solid var(--color-paper);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-ink-soft);
+}
+
 @theme {
   /* washi paper / sumi ink — see Hero.astro for the rationale */
   --color-paper: #edeae2;
