@@ -40,7 +40,10 @@ html {
 }
 
 @theme {
-  /* washi paper / sumi ink — see Hero.astro for the rationale */
+  /* washi paper / sumi ink — see Hero.astro for the rationale.
+     NOTE: scripts/ink/shaders/*.frag and kinetic.frag hardcode these same
+     hex values as GLSL vec3s (GLSL can't read CSS custom properties) — if
+     you change these, update the shader comments pointing back here too. */
   --color-paper: #edeae2;
   --color-ink: #1c1b17;
   --color-ink-soft: #5e5a4f;
@@ -104,5 +107,64 @@ html {
 
   html.js [data-reveal-line-vertical] {
     transform: scaleY(0);
+  }
+
+  /*
+   * Same reasoning as [data-reveal] above: hidden unless html.js confirms
+   * JS is actually running, so a blocked script can never leave this
+   * stuck over the hero instead of degrading to the static page.
+   */
+  [data-hero-loader] {
+    display: none;
+  }
+
+  html.js [data-hero-loader] {
+    display: flex;
+  }
+
+  [data-hero-loader-stroke] {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-hero-loader-stroke] {
+      animation: enso-draw 2.2s ease-in-out infinite;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* No loop — just settle on a fully drawn, static mark. */
+    [data-hero-loader-stroke] {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /*
+   * Draw (0-55%), hold fully drawn (55-80%), fade out (80-100%) while
+   * already fully drawn so the dashoffset can silently reset for the next
+   * loop without a visible snap — the reset only happens while opacity is
+   * already 0.
+   */
+  @keyframes enso-draw {
+    0% {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+    12% {
+      opacity: 0.85;
+    }
+    55% {
+      stroke-dashoffset: 0;
+      opacity: 0.85;
+    }
+    80% {
+      stroke-dashoffset: 0;
+      opacity: 0.85;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0;
+    }
   }
 }
