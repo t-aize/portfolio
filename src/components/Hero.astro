@@ -17,7 +17,7 @@ const year = new Date().getFullYear();
 
 <!-- `isolate` keeps the halo's negative z-index contained to this section -->
 <section
-  class="relative isolate flex min-h-svh flex-col gap-[clamp(1.5rem,5vh,3rem)] bg-paper px-[clamp(1.25rem,6vw,4.5rem)] py-[clamp(1.25rem,4vw,3rem)]"
+  class="relative isolate flex min-h-svh flex-col gap-[clamp(1.5rem,5vh,3rem)] bg-paper p-[clamp(1.75rem,6vw,4.5rem)]"
   data-hero
   data-snap-section
   aria-label="Introduction"
@@ -53,13 +53,13 @@ const year = new Date().getFullYear();
     swap the phrase for anything you actually want to say if you'd rather.
   -->
   <div
-    class="pointer-events-none absolute top-1/2 right-[clamp(1rem,4vw,3rem)] hidden -translate-y-1/2 items-center gap-3 sm:flex"
+    class="pointer-events-none absolute top-1/2 right-[clamp(1.75rem,6vw,4.5rem)] hidden -translate-y-1/2 items-center gap-3 sm:flex"
     data-hero-vertical
     aria-hidden="true"
   >
     <span class="block h-16 w-px origin-top bg-line" data-reveal-line-vertical></span>
     <span
-      class="block [writing-mode:vertical-rl] text-[0.85rem] tracking-[0.1em] text-ink-soft"
+      class="pointer-events-auto block [writing-mode:vertical-rl] text-[0.85rem] tracking-[0.1em] text-ink-soft"
       data-reveal
       data-hero-vertical-text
       lang="ja"

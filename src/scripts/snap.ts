@@ -35,9 +35,12 @@ if (!reduceMotion && canHover) {
           isSnapping = false;
         },
       });
-      setTimeout(() => {
-        isSnapping = false;
-      }, duration * 1000 + 200);
+      setTimeout(
+        () => {
+          isSnapping = false;
+        },
+        duration * 1000 + 200,
+      );
     };
 
     window.addEventListener(

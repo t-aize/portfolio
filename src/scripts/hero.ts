@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { TextScramble } from "./text-scramble";
 
 gsap.registerPlugin(SplitText);
 
@@ -88,6 +89,25 @@ if (hero) {
     hero.addEventListener("pointerleave", () => {
       revealed = false;
       gsap.to(halo, { opacity: 0, duration: 0.6 });
+    });
+  }
+
+  // Kanji translation glitch: on hover, decrypt "一期一会" into its English
+  // sense ("once, never twice" — the tea-ceremony idea that this encounter
+  // won't repeat), Cyberpunk 2077 subtitle-style — each character resolves
+  // at its own random moment instead of sweeping in order — then decrypt
+  // back on leave.
+  if (verticalText && canHover && !reduceMotion) {
+    const original = verticalText.textContent ?? "一期一会";
+    const translation = "ONCE, NEVER TWICE";
+    const scrambler = new TextScramble(verticalText);
+
+    verticalText.addEventListener("pointerenter", () => {
+      scrambler.setText(translation);
+    });
+
+    verticalText.addEventListener("pointerleave", () => {
+      scrambler.setText(original);
     });
   }
 }
