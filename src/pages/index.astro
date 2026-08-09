@@ -1,7 +1,14 @@
 ---
-import Hero from "../components/Hero.astro";
+import Hero from "../components/Hero";
 import "../styles/global.css";
 import "lenis/dist/lenis.css";
+
+// Resolved at build time, not in the browser — a static site has no other
+// clock to read from, and this only needs to be right as of the last
+// deploy. Passed down as a prop (rather than read inside Hero itself) so
+// the value baked into the server-rendered HTML and the value used during
+// client hydration are guaranteed identical, even across a year boundary.
+const year = new Date().getFullYear();
 ---
 
 <html lang="fr">
@@ -17,10 +24,10 @@ import "lenis/dist/lenis.css";
       document.documentElement.classList.add("js");
     </script>
     <script>
-      import "../scripts/lenis";
+      import "../lib/lenis";
     </script>
   </head>
   <body>
-    <Hero />
+    <Hero client:load year={year} />
   </body>
 </html>

@@ -1,9 +1,9 @@
 /**
  * Single source of truth for "how fast is the page moving right now",
- * shared between the ink shader and the kinetic type layer so both react
- * to the same signal instead of each attaching its own Lenis listener —
- * which would double the per-frame work and risk the two drifting a frame
- * out of sync with each other.
+ * shared between the ink shader and the hero name's text-shadow fringe so
+ * both react to the same signal instead of each attaching its own Lenis
+ * listener — which would double the per-frame work and risk the two
+ * drifting a frame out of sync with each other.
  */
 import { lenis } from "./lenis";
 

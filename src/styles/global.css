@@ -40,10 +40,10 @@ html {
 }
 
 @theme {
-  /* washi paper / sumi ink — see Hero.astro for the rationale.
-     NOTE: scripts/ink/shaders/*.frag and kinetic.frag hardcode these same
-     hex values as GLSL vec3s (GLSL can't read CSS custom properties) — if
-     you change these, update the shader comments pointing back here too. */
+  /* washi paper / sumi ink — see Hero.tsx for the rationale.
+     NOTE: lib/webgl/theme.ts mirrors these same values for the ink shader
+     (GLSL can't read CSS custom properties) — if you change these, update
+     that file too. */
   --color-paper: #edeae2;
   --color-ink: #1c1b17;
   --color-ink-soft: #5e5a4f;
@@ -66,7 +66,7 @@ html {
     background: var(--color-paper);
     color-scheme: light;
     /* The hero halo intentionally bleeds past its section's edges (see
-       Hero.astro) instead of being clipped by an overflow-hidden box —
+       Hero.tsx) instead of being clipped by an overflow-hidden box —
        this is the safety net that stops that bleed from ever widening
        the page horizontally. */
     overflow-x: hidden;
@@ -105,8 +105,8 @@ html {
     transform: scaleX(0);
   }
 
-  html.js [data-reveal-line-vertical] {
-    transform: scaleY(0);
+  html.js [data-reveal-wipe] {
+    clip-path: inset(0% 100% 0% 0%);
   }
 
   /*

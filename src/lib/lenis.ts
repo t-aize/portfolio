@@ -6,9 +6,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const lenis = new Lenis({
   // Lenis must not drive its own rAF loop — GSAP's ticker below drives
-  // Lenis, ScrollTrigger, the ink shader's clock, and the kinetic text
-  // renderer off the same clock so none of them can ever desync from the
-  // others under a stalled tab or a heavy frame.
+  // Lenis, ScrollTrigger, and the ink shader's clock off the same clock so
+  // none of them can ever desync from the others under a stalled tab or a
+  // heavy frame.
   autoRaf: false,
 });
 

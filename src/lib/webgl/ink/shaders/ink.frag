@@ -3,7 +3,10 @@ precision highp float;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform float uVelocity; // 0..1 smoothed scroll speed, see scroll-state.ts
-uniform float uOpacity;  // entrance fade, tweened by hero.ts
+uniform float uOpacity;  // entrance fade, tweened by Hero.tsx
+uniform vec3 uPaper;     // --color-paper, see ../../theme.ts
+uniform vec3 uInk;       // --color-ink
+uniform vec3 uAccent;    // --color-accent
 
 varying vec2 vUv;
 
@@ -56,12 +59,6 @@ vec2 curl(vec2 p) {
   return vec2(dy, -dx);
 }
 
-// Keep these in sync by hand with the --color-* tokens in global.css —
-// GLSL can't read CSS custom properties.
-vec3 paper = vec3(0.929, 0.918, 0.886);  // --color-paper  #edeae2
-vec3 ink = vec3(0.110, 0.106, 0.090);    // --color-ink    #1c1b17
-vec3 accent = vec3(0.545, 0.227, 0.169); // --color-accent #8b3a2b
-
 void main() {
   vec2 aspectUv = vUv;
   aspectUv.x *= uResolution.x / uResolution.y;
@@ -77,12 +74,21 @@ void main() {
   float density = fbm(advected * 2.0 - uTime * 0.015);
   density = clamp(density, 0.0, 1.0);
 
-  vec3 color = mix(paper, ink, smoothstep(0.35, 0.75, density));
+  vec3 color = mix(uPaper, uInk, smoothstep(0.35, 0.75, density));
 
   // A thin vein of pigment where the density gradient is steepest — the
   // "wet edge" of a real ink stroke, not a flat two-tone blend.
   float edge = smoothstep(0.42, 0.5, density) - smoothstep(0.5, 0.58, density);
-  color = mix(color, accent, edge * 0.45);
+  color = mix(color, uAccent, edge * 0.45);
+
+  // The name and role always live in the bottom band of the hero (mt-auto
+  // layout) — wash the *result* toward paper there instead of damping
+  // density pre-mix (that flattened the whole band to blank paper, since
+  // it pushed density below the smoothstep's lower threshold). Blending
+  // the final color keeps the brushwork visible, just lighter. vUv.y is 0
+  // at the bottom of the viewport, 1 at the top.
+  float readingLane = smoothstep(0.0, 0.38, vUv.y);
+  color = mix(uPaper, color, mix(0.55, 1.0, readingLane));
 
   gl_FragColor = vec4(color, uOpacity);
 }
