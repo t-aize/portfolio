@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { createShaderPass } from "../createShaderPass";
+import { createFullscreenPass } from "../createFullscreenPass";
+import { createHeroStage } from "../HeroStage";
 import { ACCENT, INK, PAPER } from "../theme";
 import fragmentShader from "./shaders/ink.frag?raw";
 import vertexShader from "./shaders/ink.vert?raw";
@@ -15,7 +16,11 @@ export interface InkSceneHandle {
   destroy(): void;
 }
 
-const MAX_PIXEL_RATIO = 1.75; // full-screen fbm at native DPR isn't worth the battery cost
+// Full-screen fbm at native DPR isn't worth the battery cost. Passed into
+// HeroStage as its pixel ratio policy: this scene has no text pass yet to
+// justify going native (that lands with HeroTextPass — see the Netteté
+// requirements in the hero WebGL mission), so it keeps the existing cap.
+const MAX_PIXEL_RATIO = 1.75;
 
 /**
  * Mounts a full-viewport (within `host`) ink simulation onto `canvas`.
@@ -38,25 +43,26 @@ export function createInkScene(
 
   // If the GPU context dies mid-session the canvas just freezes on its last
   // frame — harmless here since it's a purely decorative background layer.
-  // (No onContextLost handler needed: the default preventDefault() is enough.)
-  const pass = createShaderPass(canvas, {
-    vertexShader,
-    fragmentShader,
-    uniforms,
-    resizeTarget: host,
-    onResize: (renderer, target) => {
-      const { clientWidth, clientHeight } = target;
-      if (clientWidth === 0 || clientHeight === 0) return;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
-      renderer.setSize(clientWidth, clientHeight, false);
-      uniforms.uResolution.value.set(clientWidth, clientHeight);
+  const stage = createHeroStage(canvas, host, {
+    getPixelRatio: () => Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO),
+  });
+  if (!stage) return null;
+
+  const pass = createFullscreenPass({ vertexShader, fragmentShader, uniforms });
+
+  stage.addPass({
+    pass,
+    onFrame: ({ time, scroll }) => {
+      uniforms.uTime.value = time;
+      uniforms.uVelocity.value = scroll.velocity;
+    },
+    onResize: (_renderer, cssWidth, cssHeight) => {
+      uniforms.uResolution.value.set(cssWidth, cssHeight);
     },
   });
 
-  if (!pass) return null;
-
   return {
     uniforms: { opacity: uniforms.uOpacity },
-    destroy: pass.destroy,
+    destroy: stage.destroy,
   };
 }
