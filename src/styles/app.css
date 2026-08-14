@@ -9,6 +9,13 @@
   --font-sans:
     "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui,
     sans-serif;
+
+  /* Palette coolors.co/463f3a-8a817c-bcb8b1-f4f3ee-e0afa0 */
+  --color-cream: #f4f3ee; /* fond principal */
+  --color-ink: #463f3a; /* texte, et fond des sections sombres (avec text-cream) */
+  --color-taupe: #8a817c; /* texte secondaire / bordures */
+  --color-stone: #bcb8b1; /* texte secondaire / bordures (alternative plus claire) */
+  --color-clay: #e0afa0; /* accent : CTA, liens, hover */
 }
 
 @layer base {
