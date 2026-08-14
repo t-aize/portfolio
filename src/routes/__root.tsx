@@ -34,7 +34,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       <head>
         <HeadContent />
       </head>
-      <body className="min-h-screen bg-paper text-ink">
+      <body className="min-h-screen bg-white text-neutral-900">
         <SmoothScroll />
         <main className="px-6 py-6">{children}</main>
         <Scripts />
