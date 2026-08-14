@@ -1,7 +1,6 @@
 // troika-three-text ships no TypeScript types of its own and there's no
-// @types package for it — this declares just the surface HeroTextPass.ts
-// actually uses (see node_modules/troika-three-text/src/Text.js for the
-// full API this is trimmed from).
+// @types package for it — this declares the general Text mesh API
+// (see node_modules/troika-three-text/src/Text.js for the full surface).
 declare module "troika-three-text" {
   import type { Mesh } from "three";
 
@@ -14,6 +13,7 @@ declare module "troika-three-text" {
     color: string | number;
     anchorX: number | "left" | "center" | "right";
     anchorY: number | "top" | "top-baseline" | "middle" | "bottom-baseline" | "bottom";
+    maxWidth: number;
     sdfGlyphSize: number;
 
     /** Applies pending property changes; `callback` fires once layout is done. */

@@ -6,15 +6,29 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 10
     groups:
-      astro:
+      tanstack:
         patterns:
-          - "astro"
-          - "@astrojs/*"
+          - "@tanstack/*"
+      three:
+        patterns:
+          - "three"
+          - "@types/three"
+          - "@react-three/*"
+          - "troika-three-text"
+          - "maath"
+      animation:
+        patterns:
+          - "gsap"
+          - "@gsap/*"
+          - "lenis"
       tooling:
         patterns:
           - "@biomejs/*"
           - "husky"
           - "lint-staged"
+          - "vite"
+          - "@vitejs/*"
+          - "typescript"
 
   - package-ecosystem: "github-actions"
     directory: "/"

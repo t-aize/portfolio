@@ -3,7 +3,9 @@ dist/
 build/
 
 # generated types
-.astro/
+src/routeTree.gen.ts
+.tanstack/
+.nitro/
 
 # dependencies
 node_modules/

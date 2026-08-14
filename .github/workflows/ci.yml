@@ -14,13 +14,19 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  FORCE_COLOR: "1"
+
 jobs:
   ci:
     name: Lint, type-check & build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Install pnpm, Node.js & dependencies
         uses: pnpm/setup@v2
@@ -31,8 +37,32 @@ jobs:
       - name: Biome (format, lint, assist)
         run: pnpm run ci
 
-      - name: Astro type-check
+      - name: Type-check
         run: pnpm run typecheck
 
       - name: Build
         run: pnpm run build
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-output
+          path: .output/
+          retention-days: 7
+          if-no-files-found: error
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Scan dependency changes
+        uses: actions/dependency-review-action@v5

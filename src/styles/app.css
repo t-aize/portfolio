@@ -1,0 +1,25 @@
+@import "@fontsource/zen-kaku-gothic-new/latin-300.css";
+@import "@fontsource/zen-kaku-gothic-new/latin-ext-300.css";
+@import "@fontsource/zen-kaku-gothic-new/latin-400.css";
+@import "@fontsource/zen-kaku-gothic-new/latin-ext-400.css";
+@import "@fontsource/zen-kaku-gothic-new/japanese-400.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui,
+    sans-serif;
+
+  /* Ink background palette — keep in sync with src/lib/webgl/theme.ts.
+     Exactly three colors: warm paper, near-black ink, burnt-sienna accent
+     used only at the ink's wet edge. */
+  --color-paper: #edeae2;
+  --color-ink: #1c1b17;
+  --color-accent: #8b3a2b;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+}

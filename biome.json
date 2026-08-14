@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.8/schema.json",
   "root": true,
   "vcs": {
     "enabled": true,
@@ -11,10 +11,11 @@
     "includes": [
       "**",
       "!**/dist",
-      "!**/.astro",
+      "!**/.output",
       "!**/node_modules",
       "!**/public",
       "!**/pnpm-lock.yaml",
+      "!**/src/routeTree.gen.ts",
       "!**/.vercel",
       "!**/.netlify",
       "!**/.wrangler"
@@ -74,17 +75,12 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.astro"],
+      "includes": ["**/routeTree.gen.ts"],
       "linter": {
-        "rules": {
-          "correctness": {
-            "noUnusedVariables": "off",
-            "noUnusedImports": "off"
-          },
-          "style": {
-            "useImportType": "off"
-          }
-        }
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
       }
     }
   ]

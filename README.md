@@ -1,43 +1,54 @@
-# Astro Starter Kit: Minimal
+# TanStack Start Demo
 
-```sh
-pnpm create astro@latest -- --template minimal
-```
+A [TanStack Start](https://tanstack.com/start/latest) application: file-based
+`@tanstack/react-router` routes, validated search params, route loaders, typed
+server functions (`createServerFn`), full-document SSR with streaming, and a
+Nitro-based server build that targets any deployment runtime without changing
+the application model.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## Project Structure
 
 ```text
 /
-├── public/
+├── public/                  # static assets
 ├── src/
-│   └── pages/
-│       └── index.astro
+│   ├── data/                 # server-only modules + createServerFn wrappers
+│   ├── routes/                # file-based routes (__root.tsx is the shell)
+│   ├── styles/app.css
+│   └── router.tsx
+├── vite.config.ts
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+- `*.server.ts` files are server-only (enforced at build time via
+  `import '@tanstack/react-start/server-only'`) and are only ever imported
+  from a `*.functions.ts` file's `createServerFn` handler.
+- `*.functions.ts` files are safe to import from client components.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Commands
 
-Any static assets, like images, can be placed in the `public/` directory.
+| Command       | Action                                              |
+| :------------ | :--------------------------------------------------- |
+| `pnpm install` | Installs dependencies                                |
+| `pnpm dev`     | Starts the dev server at `localhost:3000`             |
+| `pnpm build`   | Builds the client + server bundles to `.output/`      |
+| `pnpm start`   | Runs the built server (`node .output/server/index.mjs`) |
+| `pnpm typecheck` | Type-checks the project                             |
 
-## 🧞 Commands
+## Deployment target
 
-All commands are run from the root of the project, from a terminal:
+The server build is produced by [Nitro](https://nitro.build), which supports
+many runtimes from the same route/loader/server-function code. Pick the
+target at build time:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+```sh
+DEPLOY_PRESET=node pnpm build       # default: Node.js server
+DEPLOY_PRESET=vercel pnpm build
+DEPLOY_PRESET=netlify pnpm build
+DEPLOY_PRESET=cloudflare pnpm build
+DEPLOY_PRESET=deno pnpm build
+DEPLOY_PRESET=bun pnpm build
+```
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+See `vite.config.ts` and the [Nitro deployment docs](https://nitro.build/deploy)
+for the full preset list.
