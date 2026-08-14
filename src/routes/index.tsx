@@ -1,9 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { HeroIntro } from "~/components/HeroIntro";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
-  return <h1 className="text-2xl font-semibold">Hello World</h1>;
+  return (
+    <section className="flex min-h-[80vh] flex-col items-start justify-center">
+      <HeroIntro />
+    </section>
+  );
 }
