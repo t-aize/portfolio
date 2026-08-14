@@ -4,12 +4,19 @@
  * rather than a headline sized to dominate the viewport.
  *
  * The field is no longer empty-by-default: a full-viewport ink shader
- * (see lib/webgl/ink/InkScene.ts) gives it a moving, physical presence —
- * a progressive enhancement, see useHeroEntrance.ts for the
+ * (see lib/webgl/HeroPipeline.ts) gives it a moving, physical presence — a
+ * progressive enhancement, see useHeroEntrance.ts for the
  * reduceMotion/WebGL-availability branch governing what renders when it's
- * unavailable. The name itself stays plain DOM/CSS: a clip-path wipe on
- * entrance and a scroll-velocity-reactive text-shadow fringe, both driven
- * from useHeroEntrance.ts without any canvas involved.
+ * unavailable.
+ *
+ * The eyebrow, name and role are still server-rendered here, in real
+ * Tailwind-styled markup — that's what a screen reader announces, what
+ * Ctrl+F finds, and what shows up with JS off. Once the WebGL pipeline
+ * confirms it has mirrored them (see the `data-webgl-text` nodes below and
+ * useHeroEntrance.ts), these three swap to `color: transparent` and a
+ * troika-three-text mesh positioned from their own getBoundingClientRect()
+ * takes over the visible rendering — so the ink can react to their actual
+ * glyph shapes instead of guessing where the text roughly sits.
  */
 import { useRef } from "react";
 import { useHeroEntrance } from "../hooks/useHeroEntrance";
@@ -101,6 +108,7 @@ export default function Hero({ year }: HeroProps) {
           ref={eyebrowRef}
           className="-my-1 m-0 w-fit rounded-sm bg-paper/70 px-2 py-1 text-xs font-normal tracking-[0.28em] text-ink-soft uppercase backdrop-blur-sm"
           data-reveal
+          data-webgl-text
         >
           Portfolio {year}
         </p>
@@ -133,6 +141,7 @@ export default function Hero({ year }: HeroProps) {
               "calc(var(--velocity, 0) * 3px) 0 var(--color-accent), calc(var(--velocity, 0) * -3px) 0 var(--color-ink)",
           }}
           data-reveal-wipe
+          data-webgl-text
         >
           <span
             aria-hidden="true"
@@ -145,6 +154,7 @@ export default function Hero({ year }: HeroProps) {
           ref={roleRef}
           className="mt-[0.9rem] mb-0 w-fit rounded-sm bg-paper/70 px-2 py-1 text-sm font-normal tracking-[0.28em] text-ink-soft uppercase backdrop-blur-sm"
           data-reveal
+          data-webgl-text
         >
           Développeur &middot; Backend
         </p>

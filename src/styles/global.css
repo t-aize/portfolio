@@ -110,6 +110,18 @@ html {
   }
 
   /*
+   * Set imperatively on the hero <section> by useHeroEntrance.ts, and only
+   * once the WebGL text pass has confirmed it's actually rendered (fonts
+   * loaded, every troika Text synced) — never by a blanket html.js rule,
+   * since JS running is not proof the WebGL mirror is up. Every fallback
+   * path (reduced motion, WebGL unavailable, JS blocked) simply never sets
+   * this attribute, so the DOM text stays at its normal color by default.
+   */
+  [data-webgl-text-ready] [data-webgl-text] {
+    color: transparent;
+  }
+
+  /*
    * Same reasoning as [data-reveal] above: hidden unless html.js confirms
    * JS is actually running, so a blocked script can never leave this
    * stuck over the hero instead of degrading to the static page.

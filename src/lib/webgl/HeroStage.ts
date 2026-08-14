@@ -1,13 +1,35 @@
 import { gsap } from "gsap";
 import type * as THREE from "three";
 import { onScrollState, type ScrollState } from "../scroll-state";
-import type { FullscreenPass } from "./createFullscreenPass";
 import { createRenderer } from "./createRenderer";
 
+/**
+ * The minimal shape HeroStage needs from anything it drives — satisfied
+ * structurally by createFullscreenPass's return value, but also by
+ * HeroTextPass, which owns a real Scene/PerspectiveCamera instead of a
+ * fullscreen quad and has no business importing quad-pass types to prove it
+ * fits.
+ */
+export interface StageRenderable {
+  render(renderer: THREE.WebGLRenderer, target?: THREE.WebGLRenderTarget | null): void;
+  destroy(): void;
+}
+
 export interface StagePass {
-  pass: FullscreenPass;
+  pass: StageRenderable;
   /** Render target this pass writes into; omit/null to render straight to the screen. */
   target?: THREE.WebGLRenderTarget | null;
+  /**
+   * Whether HeroStage should clear `target` before this pass draws.
+   * Defaults to true. Set to false when a pass needs to draw on top of
+   * whatever a previous pass already put in the same target this frame —
+   * e.g. the text pass drawing over the ink composite on the screen target:
+   * both target the screen, so the second one clearing would erase the
+   * first. (Renderer.autoClear is off stage-wide for exactly this reason —
+   * per-target auto-clearing can't express "clear the first writer, not
+   * the second".)
+   */
+  clear?: boolean;
   /** Called once per tick, before pass.render(). Update uTime/uVelocity/etc. here. */
   onFrame?: (ctx: { time: number; scroll: ScrollState }) => void;
   /**
@@ -65,6 +87,10 @@ export function createHeroStage(
   const rendererHandle = createRenderer(canvas);
   if (!rendererHandle) return null;
   const { renderer, destroy: destroyRenderer } = rendererHandle;
+  // Managed manually per StagePass instead (see `clear` above) — the
+  // built-in autoClear can't distinguish "first pass writing to this
+  // target this frame" from "second pass writing to the same target".
+  renderer.autoClear = false;
 
   const getPixelRatio = options.getPixelRatio ?? (() => window.devicePixelRatio);
   const passes: StagePass[] = [];
@@ -93,8 +119,13 @@ export function createHeroStage(
 
   const tick = (time: number) => {
     for (const stagePass of passes) {
+      const target = stagePass.target ?? null;
       stagePass.onFrame?.({ time, scroll: latestScroll });
-      stagePass.pass.render(renderer, stagePass.target ?? null);
+      if (stagePass.clear ?? true) {
+        renderer.setRenderTarget(target);
+        renderer.clear(true, true, true);
+      }
+      stagePass.pass.render(renderer, target);
     }
   };
   gsap.ticker.add(tick);

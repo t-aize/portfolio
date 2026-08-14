@@ -31,6 +31,12 @@ export function createFullscreenPass(options: FullscreenPassOptions): Fullscreen
     fragmentShader: options.fragmentShader,
     uniforms: options.uniforms,
     transparent: options.transparent ?? true,
+    // A fullscreen quad has no meaningful position in 3D — it must never
+    // read or write the depth buffer, or it can occlude (or be occluded by)
+    // a later pass sharing the same target (e.g. the text pass drawn after
+    // the ink composite onto the same screen framebuffer).
+    depthTest: false,
+    depthWrite: false,
   });
 
   const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);

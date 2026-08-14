@@ -8,7 +8,17 @@
 import { gsap } from "gsap";
 import type { RefObject } from "react";
 import { useEffect } from "react";
-import type { InkSceneHandle } from "../lib/webgl/ink/InkScene";
+import type { HeroPipelineHandle } from "../lib/webgl/HeroPipeline";
+import type { HeroTextTarget } from "../lib/webgl/text/HeroTextPass";
+
+// troika-three-text parses font files itself and can't read woff2, so it
+// can't use @fontsource's files directly even though they're the same
+// family/weights already loaded for the DOM text. These are a Latin-only
+// subset (~30KB each) of Zen Kaku Gothic New's unhinted source, built once
+// with hb-subset and checked in as static assets — not re-derived at build
+// time, since it's a one-off asset prep step, not a build step.
+const FONT_LIGHT = "/fonts/zen-kaku-gothic-new-latin-300.ttf";
+const FONT_REGULAR = "/fonts/zen-kaku-gothic-new-latin-400.ttf";
 
 export interface HeroRefs {
   hero: RefObject<HTMLElement | null>;
@@ -59,7 +69,7 @@ export function useHeroEntrance(refs: HeroRefs): void {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let cancelled = false;
-    let inkScene: InkSceneHandle | null = null;
+    let pipeline: HeroPipelineHandle | null = null;
     let unsubscribeVelocity: (() => void) | null = null;
     let tl: gsap.core.Timeline | null = null;
 
@@ -69,8 +79,8 @@ export function useHeroEntrance(refs: HeroRefs): void {
       // which touches `window` at module-eval time. Hero.tsx is server-
       // rendered by Astro even under client:load, so a static import here
       // would blow up during SSR — deferring it into this effect-only
-      // async flow keeps it client-side only, same reasoning as the ink
-      // scene import below.
+      // async flow keeps it client-side only, same reasoning as the WebGL
+      // pipeline import below.
       if (!reduceMotion && name) {
         const { onScrollVelocity } = await import("../lib/scroll-state");
         if (cancelled) return;
@@ -79,21 +89,46 @@ export function useHeroEntrance(refs: HeroRefs): void {
         });
       }
 
-      // --- Ink background -------------------------------------------
+      // --- Ink background + WebGL text mirror --------------------------
       if (!reduceMotion && inkCanvas) {
-        inkScene = await createGuarded(
+        pipeline = await createGuarded(
           async () => {
-            const { createInkScene } = await import("../lib/webgl/ink/InkScene");
-            return createInkScene(inkCanvas, hero);
+            const [{ createHeroPipeline }, { INK_HEX, INK_SOFT_HEX }] = await Promise.all([
+              import("../lib/webgl/HeroPipeline"),
+              import("../lib/webgl/theme"),
+            ]);
+
+            const textTargets: HeroTextTarget[] = [];
+            if (eyebrow) textTargets.push({ el: eyebrow, font: FONT_REGULAR, color: INK_SOFT_HEX });
+            if (name) {
+              textTargets.push({ el: name, font: FONT_LIGHT, color: INK_HEX, sdfGlyphSize: 256 });
+            }
+            if (role) textTargets.push({ el: role, font: FONT_REGULAR, color: INK_SOFT_HEX });
+
+            return createHeroPipeline(inkCanvas, hero, textTargets);
           },
           () => cancelled,
         );
         if (cancelled) return;
+
+        if (pipeline) {
+          // Gate on document.fonts.ready + every Text's own sync(), not
+          // just pipeline construction: that only proves the WebGLRenderer
+          // exists, not that glyphs have actually laid out yet. Flipping
+          // the DOM to transparent before that would blank the text with
+          // nothing yet drawn in its place.
+          await pipeline.textReady;
+          if (cancelled) {
+            pipeline.destroy();
+            return;
+          }
+          hero.dataset.webglTextReady = "true";
+        }
       }
 
-      // Hide the loading state now that WebGL setup (if any) has settled.
-      // For reduced motion this fires essentially immediately, since that
-      // branch never creates the ink scene above.
+      // Hide the loading state now that WebGL + text setup (if any) has
+      // settled. For reduced motion this fires essentially immediately,
+      // since that branch never creates the pipeline above.
       if (loader) {
         gsap.to(loader, {
           opacity: 0,
@@ -124,12 +159,8 @@ export function useHeroEntrance(refs: HeroRefs): void {
           "-=0.55",
         );
 
-        if (inkScene) {
-          tl.to(
-            inkScene.uniforms.opacity,
-            { value: 1, duration: 1.4, ease: "power2.out" },
-            "-=0.5",
-          );
+        if (pipeline) {
+          tl.to(pipeline.ink.opacity, { value: 1, duration: 1.4, ease: "power2.out" }, "-=0.5");
         }
 
         if (name) {
@@ -153,7 +184,7 @@ export function useHeroEntrance(refs: HeroRefs): void {
       cancelled = true;
       tl?.kill();
       unsubscribeVelocity?.();
-      inkScene?.destroy();
+      pipeline?.destroy();
     };
   }, []);
 }

@@ -1,36 +1,32 @@
 import * as THREE from "three";
 import { createFullscreenPass } from "../createFullscreenPass";
-import { createHeroStage } from "../HeroStage";
+import type { StagePass } from "../HeroStage";
+import vertexShader from "../shaders/fullscreen.vert?raw";
 import { ACCENT, INK, PAPER } from "../theme";
 import fragmentShader from "./shaders/ink.frag?raw";
-import vertexShader from "./shaders/ink.vert?raw";
 
-export interface InkSceneHandle {
+export interface InkPassHandle {
   /**
    * Tween these exactly like any other hero element, e.g.:
-   *   gsap.to(scene.uniforms.opacity, { value: 1, duration: 1.4 })
+   *   gsap.to(ink.uniforms.opacity, { value: 1, duration: 1.4 })
    */
   uniforms: {
     opacity: { value: number };
   };
-  destroy(): void;
+  /** Registered on a HeroStage by the caller — see HeroPipeline.ts. */
+  stagePass: StagePass;
 }
 
-// Full-screen fbm at native DPR isn't worth the battery cost. Passed into
-// HeroStage as its pixel ratio policy: this scene has no text pass yet to
-// justify going native (that lands with HeroTextPass — see the Netteté
-// requirements in the hero WebGL mission), so it keeps the existing cap.
-const MAX_PIXEL_RATIO = 1.75;
-
 /**
- * Mounts a full-viewport (within `host`) ink simulation onto `canvas`.
- * Returns null if WebGL isn't available at all, so the caller can fall
- * back to the static CSS halo instead of a broken canvas.
+ * Builds the ink simulation as a HeroStage pass. Doesn't own a renderer,
+ * canvas, or render target itself — HeroPipeline.ts owns the shared stage
+ * and the (deliberately capped-resolution) target this renders into, and
+ * registers `stagePass` on it. Splitting it this way is what lets the ink
+ * pass keep its existing MAX_PIXEL_RATIO tradeoff while the text pass next
+ * to it renders at native DPR on the same renderer — see the Netteté
+ * section of the hero WebGL mission for why that split exists.
  */
-export function createInkScene(
-  canvas: HTMLCanvasElement,
-  host: HTMLElement,
-): InkSceneHandle | null {
+export function createInkPass(): InkPassHandle {
   const uniforms = {
     uResolution: { value: new THREE.Vector2(1, 1) },
     uTime: { value: 0 },
@@ -41,28 +37,22 @@ export function createInkScene(
     uAccent: { value: ACCENT },
   };
 
-  // If the GPU context dies mid-session the canvas just freezes on its last
-  // frame — harmless here since it's a purely decorative background layer.
-  const stage = createHeroStage(canvas, host, {
-    getPixelRatio: () => Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO),
-  });
-  if (!stage) return null;
-
   const pass = createFullscreenPass({ vertexShader, fragmentShader, uniforms });
 
-  stage.addPass({
+  const stagePass: StagePass = {
     pass,
     onFrame: ({ time, scroll }) => {
       uniforms.uTime.value = time;
       uniforms.uVelocity.value = scroll.velocity;
     },
     onResize: (_renderer, cssWidth, cssHeight) => {
+      // CSS-space aspect ratio, not the render target's actual pixel size:
+      // the fbm frequencies below were tuned against this ratio, and it's
+      // identical either way since the target always matches the canvas's
+      // aspect ratio regardless of its resolution scale.
       uniforms.uResolution.value.set(cssWidth, cssHeight);
     },
-  });
-
-  return {
-    uniforms: { opacity: uniforms.uOpacity },
-    destroy: stage.destroy,
   };
+
+  return { uniforms: { opacity: uniforms.uOpacity }, stagePass };
 }
