@@ -114,15 +114,14 @@ export function useHeroEntrance(refs: HeroRefs): void {
         if (pipeline) {
           // Gate on document.fonts.ready + every Text's own sync(), not
           // just pipeline construction: that only proves the WebGLRenderer
-          // exists, not that glyphs have actually laid out yet. Flipping
-          // the DOM to transparent before that would blank the text with
-          // nothing yet drawn in its place.
+          // exists, not that glyphs have actually laid out yet. The actual
+          // DOM->WebGL handoff (color: transparent + revealText()) waits
+          // further still, for the entrance wipe to finish — see below.
           await pipeline.textReady;
           if (cancelled) {
             pipeline.destroy();
             return;
           }
-          hero.dataset.webglTextReady = "true";
         }
       }
 
@@ -165,7 +164,13 @@ export function useHeroEntrance(refs: HeroRefs): void {
 
         if (name) {
           // Left-to-right wipe, like a brush stroke laying the name down —
-          // plain clip-path on the real text, no canvas involved.
+          // plain clip-path on the real text, no canvas involved. The DOM
+          // stays fully opaque through this (rather than swapping to WebGL
+          // as soon as it's ready): reusing the exact same tested clip-path
+          // tween is simpler and safer than porting it into the text
+          // material as a shader-side wipe. The handoff to WebGL happens
+          // once the whole timeline completes (see below), not just this
+          // tween, since role's own fade-in still overlaps past it.
           tl.fromTo(
             name,
             { clipPath: "inset(0% 100% 0% 0%)" },
@@ -175,6 +180,13 @@ export function useHeroEntrance(refs: HeroRefs): void {
         }
 
         tl.fromTo(role, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.7 }, "-=0.55");
+
+        tl.eventCallback("onComplete", () => {
+          if (pipeline) {
+            hero.dataset.webglTextReady = "true";
+            pipeline.revealText();
+          }
+        });
       }
     }
 

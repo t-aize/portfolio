@@ -14,6 +14,8 @@ export interface HeroPipelineHandle {
   };
   /** Resolves once every text mesh has laid out at least once and fonts are ready. */
   textReady: Promise<void>;
+  /** Shows the WebGL text — see HeroTextPass.ts's revealDisplay for why it starts hidden. */
+  revealText(): void;
   destroy(): void;
 }
 
@@ -172,5 +174,10 @@ export function createHeroPipeline(
     inkTarget.dispose();
   }
 
-  return { ink: { opacity: ink.uniforms.opacity }, textReady: text.ready, destroy };
+  return {
+    ink: { opacity: ink.uniforms.opacity },
+    textReady: text.ready,
+    revealText: text.revealDisplay,
+    destroy,
+  };
 }

@@ -28,6 +28,15 @@ export interface HeroTextPassHandle {
   mask: StagePass;
   /** Resolves once every Text (both scenes) has laid out at least once. */
   ready: Promise<void>;
+  /**
+   * Makes the display glyphs visible. They start hidden (`visible = false`)
+   * so the pass can exist — and the mask can already be reacting with the
+   * ink — before the DOM's own entrance wipe has finished; see
+   * useHeroEntrance.ts, which calls this at the exact moment the wipe
+   * completes so the DOM->WebGL handoff has no visible seam. Only affects
+   * `display`; `mask` is never hidden.
+   */
+  revealDisplay(): void;
 }
 
 // Calibrated so 1 world unit = 1 CSS px at z = 0 (see syncCamera below) —
@@ -61,6 +70,7 @@ export function createHeroTextPass(targets: HeroTextTarget[]): HeroTextPassHandl
   const entries = targets.map(({ el, font, color, sdfGlyphSize }) => {
     const display = makeText(font, sdfGlyphSize);
     display.color = color;
+    display.visible = false;
     displayScene.add(display);
 
     // Color intentionally left unset (troika defaults to white).
@@ -140,5 +150,9 @@ export function createHeroTextPass(targets: HeroTextTarget[]): HeroTextPassHandl
     },
   };
 
-  return { display, mask, ready };
+  function revealDisplay() {
+    for (const { display } of entries) display.visible = true;
+  }
+
+  return { display, mask, ready, revealDisplay };
 }
