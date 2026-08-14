@@ -8,6 +8,12 @@ uniform vec3 uPaper;     // --color-paper, see ../../theme.ts
 uniform vec3 uInk;       // --color-ink
 uniform vec3 uAccent;    // --color-accent
 
+// Glyph coverage (full res, hard edges) and its blurred field (quarter res,
+// soft — see HeroPipeline.ts) of the hero's WebGL text pass. Both RedFormat:
+// only the .r channel carries data.
+uniform sampler2D uTextMask;
+uniform sampler2D uTextField;
+
 varying vec2 vUv;
 
 // ---------------------------------------------------------------------
@@ -59,13 +65,41 @@ vec2 curl(vec2 p) {
   return vec2(dy, -dx);
 }
 
+// Direction in which the blurred field's coverage increases — i.e. the
+// direction from paper toward a glyph. Used both to steer ink away from
+// letterforms and (reversed) to find their edge band for accumulation.
+vec2 fieldGradient(vec2 uv) {
+  vec2 e = 2.0 / uResolution;
+  float l = texture2D(uTextField, uv - vec2(e.x, 0.0)).r;
+  float r = texture2D(uTextField, uv + vec2(e.x, 0.0)).r;
+  float d = texture2D(uTextField, uv - vec2(0.0, e.y)).r;
+  float u = texture2D(uTextField, uv + vec2(0.0, e.y)).r;
+  return vec2(r - l, u - d);
+}
+
+// Tuning constants for the text/ink reaction — kept named and grouped so
+// they're easy to find and adjust as a block rather than buried in main().
+const float REPULSION_MIN = 0.9; // flow-field push away from glyphs, at rest
+const float REPULSION_MAX = 2.4; // ...at full scroll velocity
+const float EDGE_ACCUMULATION = 0.3; // extra density where ink butts against a glyph
+const float LEGIBILITY_WASH = 0.85; // how far the color is pulled back toward paper at glyphs
+
 void main() {
   vec2 aspectUv = vUv;
   aspectUv.x *= uResolution.x / uResolution.y;
 
+  float field = texture2D(uTextField, vUv).r;
+
   // Turbulence grows with scroll velocity: calm when still, roiled mid-scroll.
   float turbulence = 1.0 + uVelocity * 2.2;
   vec2 flow = curl(aspectUv * 2.4 * turbulence + uTime * 0.03);
+
+  // Push the flow away from glyphs before advecting — fieldGradient points
+  // from paper toward letterforms, so subtracting it steers the flow the
+  // other way. Stronger while scrolling, so the ink visibly parts around
+  // the name rather than drifting through it at rest too.
+  float repulsion = mix(REPULSION_MIN, REPULSION_MAX, uVelocity);
+  flow -= fieldGradient(vUv) * repulsion;
 
   // Advecting the sample point along the flow field over time is what
   // reads as "moving ink" rather than a static marbled texture.
@@ -74,6 +108,13 @@ void main() {
   float density = fbm(advected * 2.0 - uTime * 0.015);
   density = clamp(density, 0.0, 1.0);
 
+  // Where the blurred field sits in its mid-range, we're right at a
+  // glyph's edge (past the plateau at its core, short of open paper) — the
+  // pigment butts against the letterform and pools there, like ink meeting
+  // a resist on absorbent paper.
+  float edgeBand = smoothstep(0.08, 0.3, field) - smoothstep(0.3, 0.55, field);
+  density = clamp(density + edgeBand * EDGE_ACCUMULATION, 0.0, 1.0);
+
   vec3 color = mix(uPaper, uInk, smoothstep(0.35, 0.75, density));
 
   // A thin vein of pigment where the density gradient is steepest — the
@@ -81,14 +122,13 @@ void main() {
   float edge = smoothstep(0.42, 0.5, density) - smoothstep(0.5, 0.58, density);
   color = mix(color, uAccent, edge * 0.45);
 
-  // The name and role always live in the bottom band of the hero (mt-auto
-  // layout) — wash the *result* toward paper there instead of damping
-  // density pre-mix (that flattened the whole band to blank paper, since
-  // it pushed density below the smoothstep's lower threshold). Blending
-  // the final color keeps the brushwork visible, just lighter. vUv.y is 0
-  // at the bottom of the viewport, 1 at the top.
-  float readingLane = smoothstep(0.0, 0.38, vUv.y);
-  color = mix(uPaper, color, mix(0.55, 1.0, readingLane));
+  // Legibility: wash the result back toward paper at glyph-precision
+  // (mask ~= 1 inside a letterform, its blurred field extends the wash a
+  // little further as a soft margin) instead of the old fixed-height band
+  // across the bottom of the viewport that guessed at where the text sat.
+  float mask = texture2D(uTextMask, vUv).r;
+  float legibility = max(mask, smoothstep(0.55, 0.85, field));
+  color = mix(color, uPaper, legibility * LEGIBILITY_WASH);
 
   gl_FragColor = vec4(color, uOpacity);
 }

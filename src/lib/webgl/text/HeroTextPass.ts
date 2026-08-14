@@ -14,10 +14,20 @@ export interface HeroTextTarget {
 }
 
 export interface HeroTextPassHandle {
-  stagePass: StagePass;
-  /** Resolves once every Text has laid out at least once. */
+  /** Draws the visible glyphs, in `color`. Register on the screen target, last. */
+  display: StagePass;
+  /**
+   * Draws the same glyphs in troika's default white, same font/size/position
+   * as `display` — meant for a target cleared to black. Left at troika's
+   * default color/material (transparent: true, SDF edge alpha) rather than
+   * a dedicated shader: white blended over black IS the glyph coverage
+   * value, so the render target's red channel is exactly the mask
+   * ink.frag needs, with SDF antialiasing already baked into the edges.
+   * Register on maskRT, before the blur/ink passes that consume it.
+   */
+  mask: StagePass;
+  /** Resolves once every Text (both scenes) has laid out at least once. */
   ready: Promise<void>;
-  destroy(): void;
 }
 
 // Calibrated so 1 world unit = 1 CSS px at z = 0 (see syncCamera below) —
@@ -28,40 +38,57 @@ const CAMERA_DISTANCE = 600;
 /**
  * Mirrors a set of DOM text nodes as troika Text meshes, positioned from
  * their getBoundingClientRect() through a PerspectiveCamera calibrated so
- * world units equal CSS pixels. Registered as a HeroStage pass by
- * HeroPipeline.ts, rendered last (on top of the ink composite).
+ * world units equal CSS pixels. Builds two parallel Text instances per
+ * target (display + mask) sharing one camera and one layout pass, since
+ * three.js meshes can only belong to one scene each.
  */
 export function createHeroTextPass(targets: HeroTextTarget[]): HeroTextPassHandle {
-  const scene = new THREE.Scene();
+  const displayScene = new THREE.Scene();
+  const maskScene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera();
   camera.position.set(0, 0, CAMERA_DISTANCE);
   camera.lookAt(0, 0, 0);
 
-  const texts = targets.map(({ el, font, color, sdfGlyphSize }) => {
+  function makeText(font: string, sdfGlyphSize: number | undefined): Text {
     const text = new Text();
     text.font = font;
-    text.color = color;
     text.anchorX = "left";
     text.anchorY = "middle";
     if (sdfGlyphSize) text.sdfGlyphSize = sdfGlyphSize;
-    scene.add(text);
-    return { el, text };
+    return text;
+  }
+
+  const entries = targets.map(({ el, font, color, sdfGlyphSize }) => {
+    const display = makeText(font, sdfGlyphSize);
+    display.color = color;
+    displayScene.add(display);
+
+    // Color intentionally left unset (troika defaults to white).
+    const mask = makeText(font, sdfGlyphSize);
+    maskScene.add(mask);
+
+    return { el, display, mask };
   });
 
   function layout() {
-    for (const { el, text } of texts) {
+    for (const { el, display, mask } of entries) {
       const style = readDomTextStyle(el);
-      text.text = style.text;
-      text.fontSize = style.fontSize;
-      text.letterSpacing = style.letterSpacing;
-      text.lineHeight = style.lineHeight / style.fontSize;
+      for (const text of [display, mask]) {
+        text.text = style.text;
+        text.fontSize = style.fontSize;
+        text.letterSpacing = style.letterSpacing;
+        text.lineHeight = style.lineHeight / style.fontSize;
+      }
     }
   }
 
   function syncPositions(cssWidth: number, cssHeight: number) {
-    for (const { el, text } of texts) {
+    for (const { el, display, mask } of entries) {
       const rect = el.getBoundingClientRect();
-      text.position.set(rect.left - cssWidth / 2, cssHeight / 2 - (rect.top + rect.height / 2), 0);
+      const x = rect.left - cssWidth / 2;
+      const y = cssHeight / 2 - (rect.top + rect.height / 2);
+      display.position.set(x, y, 0);
+      mask.position.set(x, y, 0);
     }
   }
 
@@ -75,31 +102,43 @@ export function createHeroTextPass(targets: HeroTextTarget[]): HeroTextPassHandl
     layout();
     Promise.all([
       document.fonts.ready,
-      ...texts.map(({ text }) => new Promise<void>((resolveOne) => text.sync(resolveOne))),
+      ...entries.flatMap(({ display, mask }) => [
+        new Promise<void>((r) => display.sync(r)),
+        new Promise<void>((r) => mask.sync(r)),
+      ]),
     ]).then(() => resolve());
   });
 
-  const stagePass: StagePass = {
-    // No `target`/`clear: false` here — set by HeroPipeline.ts, which owns
-    // pass ordering (this must draw after the ink composite writes the
-    // screen target, without wiping it).
+  const display: StagePass = {
     pass: {
       render(renderer) {
-        renderer.render(scene, camera);
+        renderer.render(displayScene, camera);
       },
       destroy() {
-        for (const { text } of texts) text.dispose();
+        for (const { display } of entries) display.dispose();
       },
     },
     onResize: (_renderer, cssWidth, cssHeight) => {
       // Re-reads layout (not just position) on resize: the h1's font-size
       // is a clamp() tied to viewport width, so fontSize/letterSpacing
-      // themselves change, not just the box they sit in.
+      // themselves change, not just the box they sit in. Also drives the
+      // shared camera — mask's own onResize doesn't need to repeat this.
       layout();
       syncCamera(cssWidth, cssHeight);
       syncPositions(cssWidth, cssHeight);
     },
   };
 
-  return { stagePass, ready, destroy: stagePass.pass.destroy };
+  const mask: StagePass = {
+    pass: {
+      render(renderer) {
+        renderer.render(maskScene, camera);
+      },
+      destroy() {
+        for (const { mask } of entries) mask.dispose();
+      },
+    },
+  };
+
+  return { display, mask, ready };
 }
