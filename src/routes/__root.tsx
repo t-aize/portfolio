@@ -1,5 +1,6 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { InkCursor } from "~/components/InkCursor";
 import { SmoothScroll } from "~/components/SmoothScroll";
 import appCss from "~/styles/app.css?url";
 
@@ -36,7 +37,8 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body className="min-h-screen bg-cream text-ink">
         <SmoothScroll />
-        <main className="px-6 py-6">{children}</main>
+        <InkCursor />
+        <main>{children}</main>
         <Scripts />
       </body>
     </html>

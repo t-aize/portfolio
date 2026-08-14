@@ -6,9 +6,5 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  return (
-    <section className="flex min-h-[80vh] flex-col items-start justify-center">
-      <HeroIntro />
-    </section>
-  );
+  return <HeroIntro />;
 }
