@@ -56,6 +56,9 @@
     /* Firefox: thumb color, then track color */
     scrollbar-width: thin;
     scrollbar-color: var(--color-stone) transparent;
+    /* Footer's "Haut de page" anchor is plain markup, no JS — this is
+       what actually smooths its jump to #hero. */
+    scroll-behavior: smooth;
   }
 
   ::-webkit-scrollbar {

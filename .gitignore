@@ -3,9 +3,7 @@ dist/
 build/
 
 # generated types
-src/routeTree.gen.ts
-.tanstack/
-.nitro/
+.astro/
 
 # dependencies
 node_modules/
@@ -42,7 +40,6 @@ pnpm-debug.log*
 .vercel/
 .netlify/
 .wrangler/
-.output/
 
 # husky (local overrides only, hooks themselves are tracked)
 .husky/_/

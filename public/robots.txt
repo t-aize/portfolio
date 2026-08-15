@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tombcode.vercel.app/sitemap-index.xml

@@ -11,11 +11,9 @@
     "includes": [
       "**",
       "!**/dist",
-      "!**/.output",
       "!**/node_modules",
       "!**/public",
       "!**/pnpm-lock.yaml",
-      "!**/src/routeTree.gen.ts",
       "!**/.vercel",
       "!**/.netlify",
       "!**/.wrangler"
@@ -54,7 +52,8 @@
   "html": {
     "formatter": {
       "enabled": false
-    }
+    },
+    "experimentalFullSupportEnabled": true
   },
   "linter": {
     "enabled": true,
@@ -62,6 +61,7 @@
       "preset": "recommended"
     },
     "domains": {
+      "react": "recommended",
       "tailwind": "recommended"
     }
   },
@@ -75,12 +75,15 @@
   },
   "overrides": [
     {
-      "includes": ["**/routeTree.gen.ts"],
+      "includes": ["**/*.astro"],
       "linter": {
-        "enabled": false
+        "enabled": true,
+        "rules": {
+          "preset": "recommended"
+        }
       },
       "formatter": {
-        "enabled": false
+        "enabled": true
       }
     }
   ]
