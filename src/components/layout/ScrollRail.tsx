@@ -6,6 +6,12 @@ import { scrollStore } from "~/store/scroll";
 
 const EDGE_EPSILON = 0.02;
 
+// Below this, a wheel/touch tick is a trackpad tremor or an accidental
+// swipe, not "I meant to scroll" — only deltas past it can trigger the
+// snap. A mouse wheel notch clears this easily; a resting thumb on a
+// trackpad shouldn't.
+const WHEEL_SNAP_THRESHOLD = 6;
+
 // Same three points, two arrangements: collinear (a bar) or spread into
 // a wedge (a chevron). MorphSVGPlugin interpolates point-for-point
 // between them, so the bar visibly bends open into an arrow instead of
@@ -88,7 +94,7 @@ export function ScrollRail() {
       if (snappingRef.current) return true;
 
       // Scrolling down from the hero — jump straight to the index.
-      if (heroVisibleRef.current && data.deltaY > 0) {
+      if (heroVisibleRef.current && data.deltaY > WHEEL_SNAP_THRESHOLD) {
         if (data.event.cancelable) data.event.preventDefault();
         snapTo("#projects");
         return false;
@@ -97,7 +103,7 @@ export function ScrollRail() {
       // Scrolling up from right at the top of the projects list — jump
       // back to the hero. Deep in the list, this stays false and scroll
       // behaves normally: only the seam between the two sections snaps.
-      if (!heroVisibleRef.current && data.deltaY < 0) {
+      if (!heroVisibleRef.current && data.deltaY < -WHEEL_SNAP_THRESHOLD) {
         const projects = document.getElementById("projects");
         if (projects && projects.getBoundingClientRect().top >= -4) {
           if (data.event.cancelable) data.event.preventDefault();
