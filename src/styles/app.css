@@ -33,4 +33,48 @@
   body {
     font-family: var(--font-sans);
   }
+
+  /*
+   * Tailwind's preflight resets <button> to the browser default (an
+   * arrow), unlike <a>, which keeps its native pointer — so links and
+   * buttons read inconsistently even though both are clickable. This
+   * puts them back on equal footing everywhere, once, instead of adding
+   * `cursor-pointer` to every button by hand.
+   */
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /*
+   * Restyled, not removed — a hidden scrollbar removes the one visual cue
+   * that says "there's more below," which works against the site's own
+   * use of empty space. Kept thin and low-contrast so it reads as
+   * texture, not chrome. Lenis wraps the native scrollbar rather than
+   * replacing it, so these rules apply normally with no extra wiring.
+   */
+  html {
+    /* Firefox: thumb color, then track color */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-stone) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-stone);
+    border-radius: 999px;
+    /* Creates the "thin" look while keeping a full 10px hit target for
+       dragging — shrinking the box itself would shrink the target too. */
+    border: 3px solid var(--color-cream);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-clay);
+  }
 }
