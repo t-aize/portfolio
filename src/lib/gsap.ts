@@ -1,3 +1,4 @@
+import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,7 +10,7 @@ import { SplitText } from "gsap/SplitText";
 // immediately on registration, which throws during TanStack Start's SSR
 // pass.
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, SplitText, MorphSVGPlugin);
+  gsap.registerPlugin(ScrollTrigger, SplitText, MorphSVGPlugin, useGSAP);
 }
 
-export { gsap, MorphSVGPlugin, ScrollTrigger, SplitText };
+export { gsap, MorphSVGPlugin, ScrollTrigger, SplitText, useGSAP };

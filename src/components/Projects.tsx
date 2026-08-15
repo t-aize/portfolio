@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { gsap } from "~/lib/gsap";
+import { useRef } from "react";
+import { gsap, useGSAP } from "~/lib/gsap";
 
 interface Project {
   title: string;
@@ -52,36 +52,34 @@ export function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   const rowRefs = useRef<(HTMLElement | null)[]>([]);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const rows = rowRefs.current.filter((el): el is HTMLElement => el !== null);
-    if (!section || rows.length === 0) return;
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+      const rows = rowRefs.current.filter((el): el is HTMLElement => el !== null);
+      if (!section || rows.length === 0) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
-      gsap.set(rows, { autoAlpha: 1, y: 0 });
-      return;
-    }
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduceMotion) {
+        gsap.set(rows, { autoAlpha: 1, y: 0 });
+        return;
+      }
 
-    gsap.set(rows, { autoAlpha: 0, y: 24 });
+      gsap.set(rows, { autoAlpha: 0, y: 24 });
 
-    const tween = gsap.to(rows, {
-      autoAlpha: 1,
-      y: 0,
-      duration: 1.3,
-      stagger: 0.18,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: section,
-        start: "top 75%",
-      },
-    });
-
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
-  }, []);
+      gsap.to(rows, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 1.3,
+        stagger: 0.18,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top 75%",
+        },
+      });
+    },
+    { scope: sectionRef },
+  );
 
   return (
     <section id="projects" ref={sectionRef} className="relative px-8 py-24 sm:px-16 sm:py-32">

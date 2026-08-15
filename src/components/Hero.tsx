@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { gsap, SplitText } from "~/lib/gsap";
+import { useRef } from "react";
+import { gsap, SplitText, useGSAP } from "~/lib/gsap";
 
 /**
  * Composition: a kakemono (hanging scroll) — generous negative space above,
@@ -13,52 +13,53 @@ import { gsap, SplitText } from "~/lib/gsap";
  * reveal.
  */
 export function Hero() {
+  const containerRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
 
-  useEffect(() => {
-    const title = titleRef.current;
-    const rule = ruleRef.current;
-    const subtitle = subtitleRef.current;
-    if (!title || !rule || !subtitle) return;
+  useGSAP(
+    () => {
+      const title = titleRef.current;
+      const rule = ruleRef.current;
+      const subtitle = subtitleRef.current;
+      if (!title || !rule || !subtitle) return;
 
-    const titleSplit = new SplitText(title, { type: "chars", mask: "chars" });
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // SplitText auto-reverts along with everything else useGSAP
+      // creates here, once the component unmounts — no manual
+      // titleSplit.revert() needed.
+      const titleSplit = new SplitText(title, { type: "chars", mask: "chars" });
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (reduceMotion) {
-      gsap.set(titleSplit.chars, { yPercent: 0, autoAlpha: 1 });
-      gsap.set([rule, subtitle], { autoAlpha: 1, y: 0, scaleX: 1 });
-      return () => {
-        titleSplit.revert();
-      };
-    }
+      if (reduceMotion) {
+        gsap.set(titleSplit.chars, { yPercent: 0, autoAlpha: 1 });
+        gsap.set([rule, subtitle], { autoAlpha: 1, y: 0, scaleX: 1 });
+        return;
+      }
 
-    gsap.set(titleSplit.chars, { yPercent: 110, autoAlpha: 0 });
-    gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
-    gsap.set(subtitle, { autoAlpha: 0, y: 10 });
+      gsap.set(titleSplit.chars, { yPercent: 110, autoAlpha: 0 });
+      gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
+      gsap.set(subtitle, { autoAlpha: 0, y: 10 });
 
-    const tl = gsap.timeline({ delay: 0.2 });
-
-    tl.to(titleSplit.chars, {
-      yPercent: 0,
-      autoAlpha: 1,
-      duration: 1,
-      stagger: 0.04,
-      ease: "expo.out",
-    })
-      .to(rule, { scaleX: 1, duration: 0.7, ease: "power3.out" }, "-=0.3")
-      .to(subtitle, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5");
-
-    return () => {
-      tl.kill();
-      titleSplit.revert();
-    };
-  }, []);
+      gsap
+        .timeline({ delay: 0.2 })
+        .to(titleSplit.chars, {
+          yPercent: 0,
+          autoAlpha: 1,
+          duration: 1,
+          stagger: 0.04,
+          ease: "expo.out",
+        })
+        .to(rule, { scaleX: 1, duration: 0.7, ease: "power3.out" }, "-=0.3")
+        .to(subtitle, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5");
+    },
+    { scope: containerRef },
+  );
 
   return (
     <section
       id="hero"
+      ref={containerRef}
       className="relative flex min-h-dvh flex-col overflow-hidden px-8 py-10 sm:px-16 sm:py-16"
     >
       <div className="absolute bottom-8 left-8 max-w-md sm:bottom-16 sm:left-16 sm:max-w-xl">

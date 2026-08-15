@@ -1,6 +1,6 @@
 import type { VirtualScrollData } from "lenis";
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "~/lib/gsap";
+import { gsap, useGSAP } from "~/lib/gsap";
 import { getLenis, setVirtualScrollHandler } from "~/lib/lenis";
 import { scrollStore } from "~/store/scroll";
 
@@ -115,22 +115,22 @@ export function ScrollRail() {
 
   // Entrance, roughly where the hero's own timeline used to bring the
   // label in — this rail no longer belongs to that timeline.
-  useEffect(() => {
-    const rail = railRef.current;
-    if (!rail) return;
+  useGSAP(
+    () => {
+      const rail = railRef.current;
+      if (!rail) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
-      gsap.set(rail, { autoAlpha: 1 });
-      return;
-    }
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduceMotion) {
+        gsap.set(rail, { autoAlpha: 1 });
+        return;
+      }
 
-    gsap.set(rail, { autoAlpha: 0 });
-    const tween = gsap.to(rail, { autoAlpha: 1, duration: 1, delay: 0.9, ease: "power2.out" });
-    return () => {
-      tween.kill();
-    };
-  }, []);
+      gsap.set(rail, { autoAlpha: 0 });
+      gsap.to(rail, { autoAlpha: 1, duration: 1, delay: 0.9, ease: "power2.out" });
+    },
+    { scope: railRef },
+  );
 
   useEdgeMorph(atTop, upPathRef, CHEVRON_UP_PATH, -4);
   useEdgeMorph(atBottom, downPathRef, CHEVRON_DOWN_PATH, 4);
