@@ -40,7 +40,6 @@ export function Footer() {
             href="https://github.com/t-aize"
             target="_blank"
             rel="noreferrer"
-            data-cursor="hover"
             className="transition-colors hover:text-clay"
           >
             GitHub
@@ -48,22 +47,13 @@ export function Footer() {
           <span aria-hidden="true" className="text-stone">
             ·
           </span>
-          <a
-            href="mailto:tom.bialecki2211@gmail.com"
-            data-cursor="hover"
-            className="transition-colors hover:text-clay"
-          >
+          <a href="mailto:tom.bialecki2211@gmail.com" className="transition-colors hover:text-clay">
             Email
           </a>
           <span aria-hidden="true" className="text-stone">
             ·
           </span>
-          <button
-            type="button"
-            onClick={scrollToTop}
-            data-cursor="hover"
-            className="transition-colors hover:text-clay"
-          >
+          <button type="button" onClick={scrollToTop} className="transition-colors hover:text-clay">
             Haut de page ↑
           </button>
         </nav>
