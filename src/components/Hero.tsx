@@ -3,33 +3,32 @@ import { gsap, SplitText } from "~/lib/gsap";
 
 /**
  * Composition: a kakemono (hanging scroll) — generous negative space above,
- * the scroll's title running vertically along the right edge, and the
- * signature ("Tom B.") sits grounded on a plain hairline rule at the bottom,
- * the way a painter signs beneath the picture rather than inside it.
+ * the signature ("Tom B.") sits grounded on a plain hairline rule at the
+ * bottom, the way a painter signs beneath the picture rather than inside
+ * it. The scroll's vertical title now lives in ScrollRail (layout-level,
+ * persists past the hero) rather than here.
  *
- * Entrance: the name draws itself in char by char, then the rule draws out,
- * the caption settles, then the scroll title fades in last — no full-screen
- * gate, just an in-place reveal.
+ * Entrance: the name draws itself in char by char, then the rule draws
+ * out, the caption settles last — no full-screen gate, just an in-place
+ * reveal.
  */
 export function Hero() {
-  const labelRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    const label = labelRef.current;
     const title = titleRef.current;
     const rule = ruleRef.current;
     const subtitle = subtitleRef.current;
-    if (!label || !title || !rule || !subtitle) return;
+    if (!title || !rule || !subtitle) return;
 
     const titleSplit = new SplitText(title, { type: "chars", mask: "chars" });
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduceMotion) {
       gsap.set(titleSplit.chars, { yPercent: 0, autoAlpha: 1 });
-      gsap.set([label, rule, subtitle], { autoAlpha: 1, y: 0, scaleX: 1 });
+      gsap.set([rule, subtitle], { autoAlpha: 1, y: 0, scaleX: 1 });
       return () => {
         titleSplit.revert();
       };
@@ -38,7 +37,6 @@ export function Hero() {
     gsap.set(titleSplit.chars, { yPercent: 110, autoAlpha: 0 });
     gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
     gsap.set(subtitle, { autoAlpha: 0, y: 10 });
-    gsap.set(label, { autoAlpha: 0 });
 
     const tl = gsap.timeline({ delay: 0.2 });
 
@@ -50,8 +48,7 @@ export function Hero() {
       ease: "expo.out",
     })
       .to(rule, { scaleX: 1, duration: 0.7, ease: "power3.out" }, "-=0.3")
-      .to(subtitle, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5")
-      .to(label, { autoAlpha: 1, duration: 1, ease: "power2.out" }, "-=0.5");
+      .to(subtitle, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.5");
 
     return () => {
       tl.kill();
@@ -60,19 +57,10 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative flex min-h-dvh flex-col overflow-hidden px-8 py-10 sm:px-16 sm:py-16">
-      <div
-        ref={labelRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-8 right-8 hidden flex-col items-center justify-center gap-4 sm:inset-y-16 sm:right-16 sm:flex"
-      >
-        <span className="h-8 w-px bg-stone/60" />
-        <span className="text-xs tracking-[0.4em] text-taupe [writing-mode:vertical-rl]">
-          開発者 · PORTFOLIO
-        </span>
-        <span className="h-8 w-px bg-stone/60" />
-      </div>
-
+    <section
+      id="hero"
+      className="relative flex min-h-dvh flex-col overflow-hidden px-8 py-10 sm:px-16 sm:py-16"
+    >
       <div className="absolute bottom-8 left-8 max-w-md sm:bottom-16 sm:left-16 sm:max-w-xl">
         <h1
           ref={titleRef}

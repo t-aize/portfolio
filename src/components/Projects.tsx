@@ -68,8 +68,8 @@ export function Projects() {
     const tween = gsap.to(rows, {
       autoAlpha: 1,
       y: 0,
-      duration: 0.8,
-      stagger: 0.1,
+      duration: 1.3,
+      stagger: 0.18,
       ease: "power2.out",
       scrollTrigger: {
         trigger: section,
@@ -84,7 +84,7 @@ export function Projects() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-8 py-24 sm:px-16 sm:py-32">
+    <section id="projects" ref={sectionRef} className="relative px-8 py-24 sm:px-16 sm:py-32">
       <div className="mx-auto max-w-3xl">
         <div className="mb-16 flex items-center gap-4 sm:mb-20">
           <span aria-hidden="true" className="font-serif text-base text-taupe">
@@ -159,7 +159,6 @@ function ProjectRow({
         href={project.href}
         target="_blank"
         rel="noreferrer"
-        data-cursor="hover"
         className={className}
       >
         {content}
