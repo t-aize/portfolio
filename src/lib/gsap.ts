@@ -5,7 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 // GSAP is fully free (incl. ScrollTrigger, SplitText, MorphSVGPlugin)
-// since the Webflow acquisition — no Club token, no private registry.
+// since the Webflow acquisition, no Club token, no private registry.
 // Plugin registration must stay client-only: GSAP touches the DOM
 // immediately on registration, which throws during TanStack Start's SSR
 // pass.

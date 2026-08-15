@@ -6,7 +6,7 @@ import { scrollStore } from "~/store/scroll";
 let lenis: Lenis | null = null;
 
 // Pluggable, set by whoever wants to intercept a wheel/touch tick before
-// Lenis turns it into a scroll delta — e.g. ScrollRail's hero→projects
+// Lenis turns it into a scroll delta, e.g. ScrollRail's hero→projects
 // snap. Returning false from this tells Lenis "I've handled this one."
 // Lives outside the Lenis instance because the instance is a singleton
 // built once, while the handler depends on what's currently mounted.
@@ -21,7 +21,7 @@ export function setVirtualScrollHandler(
 /**
  * Module singleton so Lenis survives route changes instead of being
  * remounted with a component. `autoRaf: false` because GSAP's ticker
- * already runs a rAF loop — driving Lenis from it (rather than its own)
+ * already runs a rAF loop, driving Lenis from it (rather than its own)
  * keeps both clocks in lockstep, which is what ScrollTrigger.update()
  * needs to stay in sync with smoothed scroll.
  */

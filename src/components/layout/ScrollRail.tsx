@@ -7,10 +7,15 @@ import { scrollStore } from "~/store/scroll";
 const EDGE_EPSILON = 0.02;
 
 // Below this, a wheel/touch tick is a trackpad tremor or an accidental
-// swipe, not "I meant to scroll" — only deltas past it can trigger the
+// swipe, not "I meant to scroll". Only deltas past it can trigger the
 // snap. A mouse wheel notch clears this easily; a resting thumb on a
 // trackpad shouldn't.
 const WHEEL_SNAP_THRESHOLD = 6;
+
+// How close a section's top edge has to sit to the viewport's top edge
+// (in px) to count as "currently filling the screen," and so a valid snap
+// origin. Slack for sub-pixel layout and Lenis's own settle jitter.
+const SNAP_EDGE_EPSILON = 24;
 
 // Same three points, two arrangements: collinear (a bar) or spread into
 // a wedge (a chevron). MorphSVGPlugin interpolates point-for-point
@@ -20,6 +25,15 @@ const BAR_PATH = "M8,2 L8,8 L8,14";
 const CHEVRON_DOWN_PATH = "M2,4 L8,12 L14,4";
 const CHEVRON_UP_PATH = "M2,12 L8,4 L14,12";
 
+// The first snap section still ahead of the current scroll position, used
+// by the rail's "down" button, which (unlike the wheel/touch snap) can be
+// clicked from anywhere, not just from a section that's exactly
+// top-aligned right now.
+function getNextSectionId(): string | undefined {
+  const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-snap-section]"));
+  return sections.find((el) => el.getBoundingClientRect().top > SNAP_EDGE_EPSILON)?.id;
+}
+
 /**
  * The hero's old vertical title rail, promoted to layout-level: fixed to
  * the right edge, present on every route instead of scrolling away with
@@ -27,43 +41,29 @@ const CHEVRON_UP_PATH = "M2,12 L8,4 L14,12";
  *
  * The hairline ticks that used to just bracket the label are a bar at
  * rest and morph into a chevron the moment scrolling that way actually
- * goes somewhere — back to a bar once there's nowhere further to go
+ * goes somewhere, back to a bar once there's nowhere further to go
  * (top of the page, bottom of the page). Driven off scrollStore's
- * Lenis-fed `progress` (see store/scroll.ts), not the hero/about snap
- * logic below, so it stays correct however many sections the page ends
- * up with.
+ * Lenis-fed `progress` (see store/scroll.ts), not the snap logic below,
+ * so it stays correct however many sections the page ends up with.
  *
  * The snap itself goes through Lenis's `virtualScroll` hook (see
- * lib/lenis.ts): while the hero is in view and the wheel/touch gesture
- * points down (or #about is right at the top and it points up), this
- * claims the event instead of letting Lenis apply its usual small
- * delta, and animates straight across the seam.
+ * lib/lenis.ts): every section marked `data-snap-section` is exactly one
+ * viewport tall, so whichever one currently fills the screen from the top
+ * is a valid snap origin in both directions. A wheel/touch tick from
+ * there claims the event instead of letting Lenis apply its usual small
+ * delta, and animates straight to the next (or previous) one. Sections
+ * opt in by adding the attribute; nothing here needs to change as more
+ * get added.
  */
 export function ScrollRail() {
   const railRef = useRef<HTMLDivElement>(null);
   const upPathRef = useRef<SVGPathElement>(null);
   const downPathRef = useRef<SVGPathElement>(null);
-  const heroVisibleRef = useRef(true);
   const snappingRef = useRef(false);
   const [atTop, setAtTop] = useState(true);
   const [atBottom, setAtBottom] = useState(false);
 
-  useEffect(() => {
-    const hero = document.getElementById("hero");
-    if (!hero) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        heroVisibleRef.current = entry.isIntersecting;
-      },
-      { threshold: 0.5 },
-    );
-    observer.observe(hero);
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Bar vs chevron, on each end — purely "is there more this way," read
+  // Bar vs chevron, on each end: purely "is there more this way," read
   // straight off Lenis's scroll progress.
   useEffect(() => {
     const evaluate = () => {
@@ -79,6 +79,9 @@ export function ScrollRail() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) return;
 
+    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-snap-section]"));
+    if (sections.length === 0) return;
+
     const snapTo = (target: string) => {
       snappingRef.current = true;
       getLenis()?.scrollTo(target, {
@@ -90,37 +93,38 @@ export function ScrollRail() {
       });
     };
 
+    // The one section (if any) currently filling the screen from the very
+    // top, as opposed to one we're mid-scroll through, or one only
+    // partially in view. Since every snap section is exactly one viewport
+    // tall and they're stacked with no gaps, this is a valid snap origin
+    // in both directions: a wheel tick from here always lands cleanly on
+    // the next or previous section boundary.
+    const findCurrentIndex = (): number =>
+      sections.findIndex((el) => {
+        const top = el.getBoundingClientRect().top;
+        return top >= -SNAP_EDGE_EPSILON && top <= SNAP_EDGE_EPSILON;
+      });
+
     const handler = (data: VirtualScrollData): boolean => {
       if (snappingRef.current) return true;
 
-      // Scrolling down from the hero — jump straight past the empty
-      // space to whatever comes right after it.
-      if (heroVisibleRef.current && data.deltaY > WHEEL_SNAP_THRESHOLD) {
+      const index = findCurrentIndex();
+      if (index === -1) return true;
+
+      if (data.deltaY > WHEEL_SNAP_THRESHOLD) {
+        const next = sections[index + 1];
+        if (!next) return true; // last section: let normal scroll continue into the footer
         if (data.event.cancelable) data.event.preventDefault();
-        snapTo("#about");
+        snapTo(`#${next.id}`);
         return false;
       }
 
-      // Scrolling up from right at the top of that next section — jump
-      // back to the hero. Deep in the page, this stays false and scroll
-      // behaves normally: only the seam right after the hero snaps.
-      //
-      // Bounded both sides, not just >= -4: heroVisibleRef flips false
-      // once the hero drops under 50% visible, which — for a section
-      // shorter than a full viewport, like this one — can happen while
-      // its top is still hundreds of pixels down the screen. Without an
-      // upper bound too, any upward flick anywhere in that gap snapped
-      // straight back to the hero instead of just scrolling normally.
-      if (!heroVisibleRef.current && data.deltaY < -WHEEL_SNAP_THRESHOLD) {
-        const next = document.getElementById("about");
-        if (next) {
-          const top = next.getBoundingClientRect().top;
-          if (top >= -4 && top <= 24) {
-            if (data.event.cancelable) data.event.preventDefault();
-            snapTo("#hero");
-            return false;
-          }
-        }
+      if (data.deltaY < -WHEEL_SNAP_THRESHOLD) {
+        const prev = sections[index - 1];
+        if (!prev) return true; // first section: nothing above to snap to
+        if (data.event.cancelable) data.event.preventDefault();
+        snapTo(`#${prev.id}`);
+        return false;
       }
 
       return true;
@@ -131,7 +135,7 @@ export function ScrollRail() {
   }, []);
 
   // Entrance, roughly where the hero's own timeline used to bring the
-  // label in — this rail no longer belongs to that timeline.
+  // label in. This rail no longer belongs to that timeline.
   useGSAP(
     () => {
       const rail = railRef.current;
@@ -194,7 +198,8 @@ export function ScrollRail() {
         disabled={atBottom}
         onClick={(e) => {
           nudge(e.currentTarget, 4);
-          getLenis()?.scrollTo("#about", { duration: 1.8 });
+          const next = getNextSectionId();
+          getLenis()?.scrollTo(next ? `#${next}` : "#about", { duration: 1.8 });
         }}
         className="pointer-events-auto flex h-8 w-8 items-center justify-center text-stone transition-colors enabled:hover:text-clay disabled:cursor-default"
       >
@@ -206,7 +211,7 @@ export function ScrollRail() {
 
 /**
  * Morphs a single path between the bar and the chevron via
- * MorphSVGPlugin — the same three points sliding between collinear and
+ * MorphSVGPlugin: the same three points sliding between collinear and
  * spread, rather than two icons crossfading past each other. A slow
  * idle bounce runs only once it's settled into the chevron.
  */

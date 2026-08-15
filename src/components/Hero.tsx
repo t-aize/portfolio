@@ -2,14 +2,14 @@ import { useRef } from "react";
 import { gsap, SplitText, useGSAP } from "~/lib/gsap";
 
 /**
- * Composition: a kakemono (hanging scroll) — generous negative space above,
+ * Composition: a kakemono (hanging scroll). Generous negative space above,
  * the signature ("Tom B.") sits grounded on a plain hairline rule at the
  * bottom, the way a painter signs beneath the picture rather than inside
  * it. The scroll's vertical title now lives in ScrollRail (layout-level,
  * persists past the hero) rather than here.
  *
  * Entrance: the name draws itself in char by char, then the rule draws
- * out, the caption settles last — no full-screen gate, just an in-place
+ * out, the caption settles last. No full-screen gate, just an in-place
  * reveal.
  */
 export function Hero() {
@@ -26,7 +26,7 @@ export function Hero() {
       if (!title || !rule || !subtitle) return;
 
       // SplitText auto-reverts along with everything else useGSAP
-      // creates here, once the component unmounts — no manual
+      // creates here, once the component unmounts. No manual
       // titleSplit.revert() needed.
       const titleSplit = new SplitText(title, { type: "chars", mask: "chars" });
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -60,6 +60,7 @@ export function Hero() {
     <section
       id="hero"
       ref={containerRef}
+      data-snap-section
       className="relative flex min-h-dvh flex-col overflow-hidden px-8 py-10 sm:px-16 sm:py-16"
     >
       <div className="absolute bottom-8 left-8 max-w-md sm:bottom-16 sm:left-16 sm:max-w-xl">

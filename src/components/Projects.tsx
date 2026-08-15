@@ -17,7 +17,7 @@ const projects: Project[] = [
     href: null,
   },
   {
-    title: "aurum",
+    title: "Aurum",
     description:
       "Panel de trading terminal pour l'or (XAUUSD), ordres exécutés en direct via le MCP cTrader, structure de marché calculée en local.",
     stack: ["Bun", "TypeScript", "OpenTUI", "Effect"],
@@ -26,7 +26,7 @@ const projects: Project[] = [
   {
     title: "Zen",
     description:
-      "Bot Discord multi-usage — modération, utilitaires, commandes chargées dynamiquement par catégorie.",
+      "Bot Discord multi-usage : modération, utilitaires, commandes chargées dynamiquement par catégorie.",
     stack: ["Bun", "TypeScript", "Seyfert"],
     href: null,
   },
@@ -40,7 +40,7 @@ const projects: Project[] = [
 ];
 
 /**
- * The project list as an index, not a card grid — a table of contents for
+ * The project list as an index, not a card grid: a table of contents for
  * a scroll, not a gallery. Backend work rarely has a screenshot worth
  * showing off, so the row itself (number, name, one line, stack) carries
  * the content instead of a thumbnail.
@@ -82,7 +82,12 @@ export function Projects() {
   );
 
   return (
-    <section id="projects" ref={sectionRef} className="relative px-8 py-24 sm:px-16 sm:py-32">
+    <section
+      id="projects"
+      ref={sectionRef}
+      data-snap-section
+      className="relative flex min-h-dvh flex-col justify-center px-8 py-16 sm:px-16"
+    >
       <div className="mx-auto max-w-3xl">
         <div className="mb-16 flex items-center gap-4 sm:mb-20">
           <span aria-hidden="true" className="font-serif text-base text-taupe">

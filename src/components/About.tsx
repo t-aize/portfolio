@@ -2,11 +2,11 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "~/lib/gsap";
 
 /**
- * A short, plain-spoken bio — the section between the signature and the
+ * A short, plain-spoken bio, the section between the signature and the
  * work, same restraint as everywhere else on the page: no stat cards, no
- * skill-pill grid, just two sentences that say who's writing this and
- * why it exists. Paragraphs fade/lift in on scroll, staggered, same
- * language as the projects list below it.
+ * skill-pill grid, just a couple of sentences that say who's writing this
+ * and why it exists. Fades/lifts in on scroll, same language as the
+ * projects list below it.
  */
 export function About() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -42,7 +42,12 @@ export function About() {
   );
 
   return (
-    <section id="about" ref={sectionRef} className="relative px-8 py-24 sm:px-16 sm:py-32">
+    <section
+      id="about"
+      ref={sectionRef}
+      data-snap-section
+      className="relative flex min-h-dvh flex-col justify-center px-8 py-16 sm:px-16"
+    >
       <div className="mx-auto max-w-3xl">
         <div className="mb-16 flex items-center gap-4 sm:mb-20">
           <span aria-hidden="true" className="font-serif text-base text-taupe">
@@ -61,16 +66,8 @@ export function About() {
           >
             Étudiant en BTS SIO option SLAM, autodidacte en développement backend depuis plus de
             cinq ans. Je travaille surtout en TypeScript et Node.js, avec un faible pour les
-            systèmes temps réel — la plupart des projets ci-dessous sont nés de cet intérêt plutôt
+            systèmes temps réel. La plupart des projets ci-dessous sont nés de cet intérêt plutôt
             que d'un besoin précis.
-          </p>
-          <p
-            ref={(el) => {
-              paraRefs.current[1] = el;
-            }}
-            className="text-base leading-relaxed text-taupe sm:text-lg"
-          >
-            Actuellement à la recherche d'un stage de six semaines en environnement professionnel.
           </p>
         </div>
       </div>
