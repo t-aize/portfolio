@@ -1,15 +1,31 @@
 import { Link } from "@tanstack/react-router";
 
+/**
+ * The 404 in the same voice as the hero's signature: a large serif
+ * mark grounded on a hairline rule, a small tracked caption — stated
+ * plainly, no illustration. "無" (mu, "nothing") stands in for the
+ * missing page the way "完" closes the footer's colophon.
+ */
 export function NotFound() {
   return (
-    <div className="flex min-h-[60vh] flex-col items-start justify-center gap-4">
-      <p className="text-sm text-taupe">404</p>
-      <h1 className="text-2xl font-semibold">Page introuvable</h1>
+    <div className="flex min-h-[70vh] flex-col items-center justify-center px-8 text-center sm:px-16">
+      <span aria-hidden="true" className="font-serif text-sm text-taupe">
+        無
+      </span>
+
+      <h1 className="mt-2 font-serif text-6xl leading-none text-ink sm:text-8xl">404</h1>
+
+      <div aria-hidden="true" className="mt-6 h-px w-44 bg-stone sm:mt-8 sm:w-56" />
+
+      <p className="mt-4 text-xs tracking-[0.3em] text-taupe uppercase sm:text-sm">
+        Page introuvable
+      </p>
+
       <Link
         to="/"
-        className="text-sm text-clay underline underline-offset-4 transition-colors hover:text-ink"
+        className="mt-10 text-xs tracking-[0.3em] text-taupe uppercase transition-colors hover:text-clay"
       >
-        Retour à l'accueil
+        Retour à l'accueil →
       </Link>
     </div>
   );
