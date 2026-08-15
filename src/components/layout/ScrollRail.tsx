@@ -29,15 +29,15 @@ const CHEVRON_UP_PATH = "M2,12 L8,4 L14,12";
  * rest and morph into a chevron the moment scrolling that way actually
  * goes somewhere — back to a bar once there's nowhere further to go
  * (top of the page, bottom of the page). Driven off scrollStore's
- * Lenis-fed `progress` (see store/scroll.ts), not the hero/projects
- * snap logic below, so it stays correct however many sections the page
- * ends up with.
+ * Lenis-fed `progress` (see store/scroll.ts), not the hero/about snap
+ * logic below, so it stays correct however many sections the page ends
+ * up with.
  *
  * The snap itself goes through Lenis's `virtualScroll` hook (see
  * lib/lenis.ts): while the hero is in view and the wheel/touch gesture
- * points down (or the projects index is right at the top and it points
- * up), this claims the event instead of letting Lenis apply its usual
- * small delta, and animates straight across the seam.
+ * points down (or #about is right at the top and it points up), this
+ * claims the event instead of letting Lenis apply its usual small
+ * delta, and animates straight across the seam.
  */
 export function ScrollRail() {
   const railRef = useRef<HTMLDivElement>(null);
@@ -93,22 +93,33 @@ export function ScrollRail() {
     const handler = (data: VirtualScrollData): boolean => {
       if (snappingRef.current) return true;
 
-      // Scrolling down from the hero — jump straight to the index.
+      // Scrolling down from the hero — jump straight past the empty
+      // space to whatever comes right after it.
       if (heroVisibleRef.current && data.deltaY > WHEEL_SNAP_THRESHOLD) {
         if (data.event.cancelable) data.event.preventDefault();
-        snapTo("#projects");
+        snapTo("#about");
         return false;
       }
 
-      // Scrolling up from right at the top of the projects list — jump
-      // back to the hero. Deep in the list, this stays false and scroll
-      // behaves normally: only the seam between the two sections snaps.
+      // Scrolling up from right at the top of that next section — jump
+      // back to the hero. Deep in the page, this stays false and scroll
+      // behaves normally: only the seam right after the hero snaps.
+      //
+      // Bounded both sides, not just >= -4: heroVisibleRef flips false
+      // once the hero drops under 50% visible, which — for a section
+      // shorter than a full viewport, like this one — can happen while
+      // its top is still hundreds of pixels down the screen. Without an
+      // upper bound too, any upward flick anywhere in that gap snapped
+      // straight back to the hero instead of just scrolling normally.
       if (!heroVisibleRef.current && data.deltaY < -WHEEL_SNAP_THRESHOLD) {
-        const projects = document.getElementById("projects");
-        if (projects && projects.getBoundingClientRect().top >= -4) {
-          if (data.event.cancelable) data.event.preventDefault();
-          snapTo("#hero");
-          return false;
+        const next = document.getElementById("about");
+        if (next) {
+          const top = next.getBoundingClientRect().top;
+          if (top >= -4 && top <= 24) {
+            if (data.event.cancelable) data.event.preventDefault();
+            snapTo("#hero");
+            return false;
+          }
         }
       }
 
@@ -179,11 +190,11 @@ export function ScrollRail() {
 
       <button
         type="button"
-        aria-label="Aller aux projets"
+        aria-label="Découvrir la suite"
         disabled={atBottom}
         onClick={(e) => {
           nudge(e.currentTarget, 4);
-          getLenis()?.scrollTo("#projects", { duration: 1.8 });
+          getLenis()?.scrollTo("#about", { duration: 1.8 });
         }}
         className="pointer-events-auto flex h-8 w-8 items-center justify-center text-stone transition-colors enabled:hover:text-clay disabled:cursor-default"
       >

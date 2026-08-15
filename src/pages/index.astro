@@ -1,4 +1,5 @@
 ---
+import { About } from "~/components/About.tsx";
 import { Hero } from "~/components/Hero.tsx";
 import { Projects } from "~/components/Projects.tsx";
 import Layout from "~/layouts/Layout.astro";
@@ -6,5 +7,6 @@ import Layout from "~/layouts/Layout.astro";
 
 <Layout>
   <Hero client:load />
+  <About client:visible />
   <Projects client:visible />
 </Layout>
