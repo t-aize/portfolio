@@ -54,7 +54,7 @@ export function InkCursor() {
     <div
       ref={auraRef}
       aria-hidden="true"
-      className="pointer-events-none fixed top-0 left-0 z-0 h-72 w-72 rounded-full bg-radial from-clay to-70% to-transparent opacity-80 blur-2xl"
+      className="pointer-events-none fixed top-0 left-0 z-0 h-56 w-56 rounded-full bg-radial from-clay to-50% to-transparent opacity-50 mix-blend-multiply blur-2xl"
     />
   );
 }

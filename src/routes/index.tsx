@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { HeroIntro } from "~/components/HeroIntro";
+import { Hero } from "~/components/Hero";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
-  return <HeroIntro />;
+  return <Hero />;
 }

@@ -1,7 +1,5 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
-import type { ReactNode } from "react";
-import { InkCursor } from "~/components/InkCursor";
-import { SmoothScroll } from "~/components/SmoothScroll";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { RootLayout } from "~/components/layout/RootLayout";
 import appCss from "~/styles/app.css?url";
 
 export const Route = createRootRoute({
@@ -23,24 +21,8 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <RootDocument>
+    <RootLayout>
       <Outlet />
-    </RootDocument>
-  );
-}
-
-function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
-  return (
-    <html lang="fr">
-      <head>
-        <HeadContent />
-      </head>
-      <body className="min-h-screen bg-cream text-ink">
-        <SmoothScroll />
-        <InkCursor />
-        <main>{children}</main>
-        <Scripts />
-      </body>
-    </html>
+    </RootLayout>
   );
 }
