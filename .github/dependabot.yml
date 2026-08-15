@@ -5,17 +5,13 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(deps)"
     groups:
-      tanstack:
+      astro:
         patterns:
-          - "@tanstack/*"
-      three:
-        patterns:
-          - "three"
-          - "@types/three"
-          - "@react-three/*"
-          - "troika-three-text"
-          - "maath"
+          - "astro"
+          - "@astrojs/*"
       animation:
         patterns:
           - "gsap"
@@ -26,11 +22,11 @@ updates:
           - "@biomejs/*"
           - "husky"
           - "lint-staged"
-          - "vite"
-          - "@vitejs/*"
           - "typescript"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore(ci)"

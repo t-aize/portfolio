@@ -24,12 +24,12 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
       - name: Install pnpm, Node.js & dependencies
-        uses: pnpm/setup@v2
+        uses: pnpm/setup@v2.0.2
         with:
           runtime: node@22
           cache: true
@@ -44,10 +44,10 @@ jobs:
         run: pnpm run build
 
       - name: Upload build output
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: build-output
-          path: .output/
+          path: dist/
           retention-days: 7
           if-no-files-found: error
 
@@ -60,9 +60,9 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
       - name: Scan dependency changes
-        uses: actions/dependency-review-action@v5
+        uses: actions/dependency-review-action@v5.0.0
