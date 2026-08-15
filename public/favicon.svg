@@ -1,9 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
-    <path d="M50.4 78.5a75.1 75.1 0 0 0-28.5 6.9l24.2-65.7c.7-2 1.9-3.2 3.4-3.2h29c1.5 0 2.7 1.2 3.4 3.2l24.2 65.7s-11.6-7-28.5-7L67 45.5c-.4-1.7-1.6-2.8-2.9-2.8-1.3 0-2.5 1.1-2.9 2.7L50.4 78.5Zm-1.1 28.2Zm-4.2-20.2c-2 6.6-.6 15.8 4.2 20.2a17.5 17.5 0 0 1 .2-.7 5.5 5.5 0 0 1 5.7-4.5c2.8.1 4.3 1.5 4.7 4.7.2 1.1.2 2.3.2 3.5v.4c0 2.7.7 5.2 2.2 7.4a13 13 0 0 0 5.7 4.9v-.3l-.2-.3c-1.8-5.6-.5-9.5 4.4-12.8l1.5-1a73 73 0 0 0 3.2-2.2 16 16 0 0 0 6.8-11.4c.3-2 .1-4-.6-6l-.8.6-1.6 1a37 37 0 0 1-22.4 2.7c-5-.7-9.7-2-13.2-6.2Z" />
-    <style>
-        path { fill: #000; }
-        @media (prefers-color-scheme: dark) {
-            path { fill: #FFF; }
-        }
-    </style>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!--
+    A hanko (印, personal seal): a stamp, not a logo. Reads "トム"
+    (Tomu) — the standard katakana rendering of "Tom", the way a
+    foreign name actually gets carved on a real inkan, stacked
+    top-to-bottom the way multi-character seals are set. The glyph
+    outlines are traced from Shippori Mincho itself (the site's one
+    serif voice) rather than approximated by hand, then bolded with
+    a stroke overlay — real hanko are carved thick for the same
+    reason this needs to be: fine strokes don't survive a 16px tab
+    icon any more than they'd survive being carved into stone. Cut
+    through the stamp as true negative space, so it reads correctly
+    on whatever sits behind it — no light/dark variant needed. The
+    2° rotation is the paper receiving the mark, not the mark itself.
+  -->
+  <g transform="rotate(-2 16 16)">
+    <mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
+      <rect x="4" y="4" width="24" height="24" rx="2.5" fill="#fff" />
+      <g fill="#000" stroke="#000" stroke-width="70" stroke-linejoin="round">
+        <path
+          transform="translate(10.41,15.75) scale(0.0105)"
+          d="M467-481Q575-468 657-430.5Q739-393 739-328Q739-306 727.5-291.5Q716-277 699-277Q668-277 624-330Q587-377 549.5-409Q512-441 467-460L467-447Q467-338 468-284Q470-150 475-108Q484-50 484-34Q484-12 476 4Q468 20 456 28.5Q444 37 435 37Q418 37 402.5 11.5Q387-14 377.5-47Q368-80 368-97Q368-104 372-140Q378-192 380-212Q382-242 383.5-291.5Q385-341 386-364L387-412Q388-443 388-502L388-582Q388-665 383-694Q380-716 369.5-728Q359-740 340-752Q337-753 331.5-756Q326-759 326-762Q326-773 358.5-781.5Q391-790 411-790Q447-790 475-762Q488-749 488-730Q488-717 483-700Q475-675 472-648.5Q469-622 469-568"
+        />
+        <path
+          transform="translate(10.71,24.31) scale(0.0105)"
+          d="M621-398Q666-385 722-359Q778-333 822.5-289.5Q867-246 867-191Q867-158 850-139.5Q833-121 812-121Q793-121 777-139Q761-157 752-188Q743-217 730-243Q652-217 506-171.5Q360-126 326-117Q308-112 298-106.5Q288-101 276-91Q267-84 262-81.5Q257-79 248-79Q231-79 209.5-93.5Q188-108 169-136.5Q150-165 143-204Q142-210 141-217.5Q140-225 140-232Q140-244 142-254Q144-264 147-264Q151-264 157-253Q163-242 169-235Q182-218 201-211Q220-204 252-203Q311-292 363-410.5Q415-529 429-589Q433-608 433-620Q433-649 416-668Q407-679 397.5-686.5Q388-694 388-697Q388-704 408-704Q433-704 474.5-687.5Q516-671 547.5-646.5Q579-622 579-599Q579-591 573-583.5Q567-576 554-565Q527-544 511-518Q476-458 412-363Q348-268 297-205Q376-210 494.5-225.5Q613-241 718-266Q673-339 610-379Q608-380 601-384.5Q594-389 594-393Q594-400 604-400Q611-400 621-398"
+        />
+      </g>
+    </mask>
+    <rect x="4" y="4" width="24" height="24" rx="2.5" fill="#e0afa0" mask="url(#cut)" />
+  </g>
 </svg>
