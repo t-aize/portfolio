@@ -1,4 +1,6 @@
 ---
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 import { Footer } from "~/components/layout/Footer.tsx";
 import { ScrollRail } from "~/components/layout/ScrollRail.tsx";
 import { SmoothScroll } from "~/components/layout/SmoothScroll.tsx";
@@ -73,5 +75,7 @@ const otherOgLocale = lang === "fr" ? "en_US" : "fr_FR";
       <slot />
     </main>
     <Footer client:visible lang={lang} frHref={frHref} enHref={enHref} />
+    <Analytics />
+    <SpeedInsights />
   </body>
 </html>
