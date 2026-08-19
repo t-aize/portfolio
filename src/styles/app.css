@@ -17,7 +17,7 @@
   --font-serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
 
   /* Palette coolors.co/463f3a-8a817c-bcb8b1-f4f3ee-e0afa0 */
-  --color-cream: #f4f3ee; /* fond principal */
+  --color-cream: #f3f0e7; /* fond principal */
   --color-ink: #463f3a; /* texte, et fond des sections sombres (avec text-cream) */
   --color-taupe: #8a817c; /* texte secondaire / bordures */
   --color-stone: #bcb8b1; /* texte secondaire / bordures (alternative plus claire) */
@@ -73,8 +73,11 @@
     background-color: var(--color-stone);
     border-radius: 999px;
     /* Creates the "thin" look while keeping a full 10px hit target for
-       dragging: shrinking the box itself would shrink the target too. */
-    border: 3px solid var(--color-cream);
+       dragging: shrinking the box itself would shrink the target too.
+       Transparent rather than cream so it doesn't show as a ring
+       wherever the page behind isn't exactly cream. */
+    border: 3px solid transparent;
+    background-clip: padding-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {

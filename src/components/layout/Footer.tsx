@@ -1,3 +1,4 @@
+import { ArrowUp } from "lucide-react";
 import { dictionaries, type Lang } from "~/i18n/dictionaries";
 import { getLenis, SCROLL_DURATION } from "~/lib/lenis";
 
@@ -8,7 +9,13 @@ import { getLenis, SCROLL_DURATION } from "~/lib/lenis";
  * grid of social icons. "完" (kanji for "the end") stands in for a mark
  * of completion, the way it closes a manga chapter or a scroll.
  */
-export function Footer({ lang }: { lang: Lang }) {
+interface Props {
+  lang: Lang;
+  frHref: string;
+  enHref: string;
+}
+
+export function Footer({ lang, frHref, enHref }: Props) {
   const t = dictionaries[lang];
   const year = new Date().getFullYear();
 
@@ -28,8 +35,8 @@ export function Footer({ lang }: { lang: Lang }) {
         </p>
 
         <nav
-          aria-label={t.footer.contactAria}
-          className="flex items-center gap-4 text-xs tracking-[0.3em] text-taupe uppercase"
+          aria-label={t.footer.navAria}
+          className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs tracking-[0.3em] text-taupe uppercase"
         >
           <a
             href="https://github.com/t-aize"
@@ -37,7 +44,7 @@ export function Footer({ lang }: { lang: Lang }) {
             rel="noreferrer"
             className="transition-colors hover:text-clay"
           >
-            GitHub
+            @t-aize
           </a>
           <span aria-hidden="true" className="text-stone">
             ·
@@ -48,32 +55,39 @@ export function Footer({ lang }: { lang: Lang }) {
             rel="noreferrer"
             className="transition-colors hover:text-clay"
           >
-            LinkedIn
+            tom-bialecki
           </a>
           <span aria-hidden="true" className="text-stone">
             ·
           </span>
           <a href="mailto:tom.bialecki2211@gmail.com" className="transition-colors hover:text-clay">
-            Email
+            tom.bialecki2211@gmail.com
+          </a>
+          <span aria-hidden="true" className="text-stone">
+            ·
+          </span>
+          <a href={`/${lang}/veille`} className="transition-colors hover:text-clay">
+            {t.footer.veille}
           </a>
           <span aria-hidden="true" className="text-stone">
             ·
           </span>
           <button
             type="button"
-            onClick={() => getLenis()?.scrollTo("#hero", { duration: SCROLL_DURATION })}
-            className="transition-colors hover:text-clay"
+            onClick={() => getLenis()?.scrollTo(0, { duration: SCROLL_DURATION })}
+            className="inline-flex items-center gap-1 transition-colors hover:text-clay"
           >
             {t.footer.backToTop}
+            <ArrowUp aria-hidden="true" size={12} strokeWidth={1.5} />
           </button>
         </nav>
 
         <nav
           aria-label={t.langSwitch.aria}
-          className="flex items-center gap-3 text-xs tracking-[0.3em] text-taupe uppercase"
+          className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs tracking-[0.3em] text-taupe uppercase"
         >
           <a
-            href="/fr"
+            href={frHref}
             aria-current={lang === "fr" ? "page" : undefined}
             onClick={() => setLangCookie("fr")}
             className={
@@ -88,7 +102,7 @@ export function Footer({ lang }: { lang: Lang }) {
             ·
           </span>
           <a
-            href="/en"
+            href={enHref}
             aria-current={lang === "en" ? "page" : undefined}
             onClick={() => setLangCookie("en")}
             className={

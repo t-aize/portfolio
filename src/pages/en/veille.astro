@@ -1,0 +1,11 @@
+---
+import { Veille } from "~/components/Veille.tsx";
+import { dictionaries } from "~/i18n/dictionaries";
+import Layout from "~/layouts/Layout.astro";
+
+const t = dictionaries.en.veille.meta;
+---
+
+<Layout lang="en" title={t.title} description={t.description}>
+  <Veille client:visible lang="en" />
+</Layout>

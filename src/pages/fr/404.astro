@@ -1,4 +1,5 @@
 ---
+import { ArrowRight } from "lucide-react";
 import { dictionaries } from "~/i18n/dictionaries";
 import Layout from "~/layouts/Layout.astro";
 
@@ -17,9 +18,10 @@ const t = dictionaries.fr.notFound;
 
     <a
       href="/fr"
-      class="mt-10 text-xs tracking-[0.3em] text-taupe uppercase transition-colors hover:text-clay"
+      class="mt-10 inline-flex items-center gap-1 text-xs tracking-[0.3em] text-taupe uppercase transition-colors hover:text-clay"
     >
       {t.back}
+      <ArrowRight aria-hidden="true" size={12} strokeWidth={1.5} />
     </a>
   </div>
 </Layout>

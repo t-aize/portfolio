@@ -1,21 +1,14 @@
-import type { VirtualScrollData } from "lenis";
 import { useEffect, useRef, useState } from "react";
 import { dictionaries, type Lang } from "~/i18n/dictionaries";
 import { gsap, useGSAP } from "~/lib/gsap";
-import { getLenis, SCROLL_DURATION, setVirtualScrollHandler } from "~/lib/lenis";
+import { getLenis, SCROLL_DURATION } from "~/lib/lenis";
 import { scrollStore } from "~/store/scroll";
 
 const EDGE_EPSILON = 0.02;
 
-// Below this, a wheel/touch tick is a trackpad tremor or an accidental
-// swipe, not "I meant to scroll". Only deltas past it can trigger the
-// snap. Set high enough that a light or hesitant scroll passes through as
-// normal scrolling instead of firing the snap.
-const WHEEL_SNAP_THRESHOLD = 12;
-
 // How close a section's top edge has to sit to the viewport's top edge
-// (in px) to count as "currently filling the screen," and so a valid snap
-// origin. Slack for sub-pixel layout and Lenis's own settle jitter.
+// (in px) to count as "currently filling the screen" — used to find the
+// next section for the rail's down button.
 const SNAP_EDGE_EPSILON = 24;
 
 // Same three points, two arrangements: collinear (a bar) or spread into
@@ -27,9 +20,8 @@ const CHEVRON_DOWN_PATH = "M2,4 L8,12 L14,4";
 const CHEVRON_UP_PATH = "M2,12 L8,4 L14,12";
 
 // The first snap section still ahead of the current scroll position, used
-// by the rail's "down" button, which (unlike the wheel/touch snap) can be
-// clicked from anywhere, not just from a section that's exactly
-// top-aligned right now.
+// by the rail's "down" button, which can be clicked from anywhere, not
+// just from a section that's exactly top-aligned right now.
 function getNextSectionId(): string | undefined {
   const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-snap-section]"));
   return sections.find((el) => el.getBoundingClientRect().top > SNAP_EDGE_EPSILON)?.id;
@@ -44,30 +36,34 @@ function getNextSectionId(): string | undefined {
  * rest and morph into a chevron the moment scrolling that way actually
  * goes somewhere, back to a bar once there's nowhere further to go
  * (top of the page, bottom of the page). Driven off scrollStore's
- * Lenis-fed `progress` (see store/scroll.ts), not the snap logic below,
- * so it stays correct however many sections the page ends up with.
- *
- * The snap itself goes through Lenis's `virtualScroll` hook (see
- * lib/lenis.ts): every section marked `data-snap-section` is exactly one
- * viewport tall, so whichever one currently fills the screen from the top
- * is a valid snap origin in both directions. A wheel/touch tick from
- * there claims the event instead of letting Lenis apply its usual small
- * delta, and animates straight to the next (or previous) one. Sections
- * opt in by adding the attribute; nothing here needs to change as more
- * get added.
+ * Lenis-fed `progress` (see store/scroll.ts), so it stays correct
+ * however many sections the page ends up with. Scrolling itself is
+ * always the visitor's own: this rail only jumps a full section on an
+ * explicit click of one of its buttons, never on a plain wheel/touch
+ * tick.
  */
 export function ScrollRail({ lang }: { lang: Lang }) {
   const t = dictionaries[lang];
   const railRef = useRef<HTMLDivElement>(null);
   const upPathRef = useRef<SVGPathElement>(null);
   const downPathRef = useRef<SVGPathElement>(null);
-  const snappingRef = useRef(false);
   const [atTop, setAtTop] = useState(true);
   const [atBottom, setAtBottom] = useState(false);
 
   // Bar vs chevron, on each end: purely "is there more this way," read
-  // straight off Lenis's scroll progress.
+  // straight off Lenis's scroll progress. Only meaningful on the
+  // snap-scroll homepage, whose buttons jump to #hero/#about — on any
+  // other page (e.g. the veille article) those anchors don't exist, so
+  // the rail stays inert bars instead of morphing into a chevron that
+  // promises a destination it can't reach.
   useEffect(() => {
+    const hasSnapSections = document.querySelectorAll("[data-snap-section]").length > 0;
+    if (!hasSnapSections) {
+      setAtTop(true);
+      setAtBottom(true);
+      return;
+    }
+
     const evaluate = () => {
       const { progress } = scrollStore.getState();
       setAtTop(progress <= EDGE_EPSILON);
@@ -75,65 +71,6 @@ export function ScrollRail({ lang }: { lang: Lang }) {
     };
     evaluate();
     return scrollStore.subscribe(evaluate);
-  }, []);
-
-  useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return;
-
-    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-snap-section]"));
-    if (sections.length === 0) return;
-
-    const snapTo = (target: string) => {
-      snappingRef.current = true;
-      getLenis()?.scrollTo(target, {
-        duration: SCROLL_DURATION,
-        lock: true,
-        onComplete: () => {
-          snappingRef.current = false;
-        },
-      });
-    };
-
-    // The one section (if any) currently filling the screen from the very
-    // top, as opposed to one we're mid-scroll through, or one only
-    // partially in view. Since every snap section is exactly one viewport
-    // tall and they're stacked with no gaps, this is a valid snap origin
-    // in both directions: a wheel tick from here always lands cleanly on
-    // the next or previous section boundary.
-    const findCurrentIndex = (): number =>
-      sections.findIndex((el) => {
-        const top = el.getBoundingClientRect().top;
-        return top >= -SNAP_EDGE_EPSILON && top <= SNAP_EDGE_EPSILON;
-      });
-
-    const handler = (data: VirtualScrollData): boolean => {
-      if (snappingRef.current) return true;
-
-      const index = findCurrentIndex();
-      if (index === -1) return true;
-
-      if (data.deltaY > WHEEL_SNAP_THRESHOLD) {
-        const next = sections[index + 1];
-        if (!next) return true; // last section: let normal scroll continue into the footer
-        if (data.event.cancelable) data.event.preventDefault();
-        snapTo(`#${next.id}`);
-        return false;
-      }
-
-      if (data.deltaY < -WHEEL_SNAP_THRESHOLD) {
-        const prev = sections[index - 1];
-        if (!prev) return true; // first section: nothing above to snap to
-        if (data.event.cancelable) data.event.preventDefault();
-        snapTo(`#${prev.id}`);
-        return false;
-      }
-
-      return true;
-    };
-
-    setVirtualScrollHandler(handler);
-    return () => setVirtualScrollHandler(null);
   }, []);
 
   // Entrance, roughly where the hero's own timeline used to bring the
@@ -201,7 +138,11 @@ export function ScrollRail({ lang }: { lang: Lang }) {
         onClick={(e) => {
           nudge(e.currentTarget, 4);
           const next = getNextSectionId();
-          getLenis()?.scrollTo(next ? `#${next}` : "#about", { duration: SCROLL_DURATION });
+          // Past the last snap section there's nothing left to jump to
+          // but the footer — "bottom" (a Lenis keyword, not a selector)
+          // takes it there directly instead of bouncing back to an
+          // arbitrary earlier section.
+          getLenis()?.scrollTo(next ? `#${next}` : "bottom", { duration: SCROLL_DURATION });
         }}
         className="pointer-events-auto flex h-8 w-8 items-center justify-center text-stone transition-colors enabled:hover:text-clay disabled:cursor-default"
       >

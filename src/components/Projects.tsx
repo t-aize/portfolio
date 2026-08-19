@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 import { type ProjectData, projects } from "~/data/projects";
 import { dictionaries, type Lang } from "~/i18n/dictionaries";
@@ -113,11 +114,18 @@ function ProjectRow({
           <span
             className={
               project.href
-                ? "text-xs tracking-[0.25em] text-taupe uppercase transition-colors group-hover:text-clay"
+                ? "inline-flex items-center gap-1 text-xs tracking-[0.25em] text-taupe uppercase transition-colors group-hover:text-clay"
                 : "text-xs tracking-[0.25em] text-stone uppercase"
             }
           >
-            {project.href ? labels.github : labels.private}
+            {project.href ? (
+              <>
+                {labels.github}
+                <ArrowUpRight aria-hidden="true" size={12} strokeWidth={1.5} />
+              </>
+            ) : (
+              labels.private
+            )}
           </span>
         </div>
         <p className="mt-2 max-w-xl text-sm text-taupe">{description}</p>

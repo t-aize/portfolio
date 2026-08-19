@@ -19,9 +19,16 @@ const pageDescription = description ?? t.meta.description;
 // Both locales are explicitly prefixed (/fr, /en) — mirror that here to
 // build the hreflang alternate rather than relying on Astro's
 // currentLocale, which only knows about the file this layout was rendered
-// from.
+// from. Path-preserving (swaps just the locale segment) so it stays
+// correct on every page, not just the homepage.
 const otherLang: Lang = lang === "fr" ? "en" : "fr";
-const otherPath = `/${otherLang}`;
+const otherPath = Astro.url.pathname.replace(/^\/(fr|en)/, `/${otherLang}`);
+const frHref = lang === "fr" ? Astro.url.pathname : otherPath;
+const enHref = lang === "en" ? Astro.url.pathname : otherPath;
+
+const ogImage = new URL("/og-image.png", Astro.url).href;
+const ogLocale = lang === "fr" ? "fr_FR" : "en_US";
+const otherOgLocale = lang === "fr" ? "en_US" : "fr_FR";
 ---
 
 <!doctype html>
@@ -36,13 +43,35 @@ const otherPath = `/${otherLang}`;
     <link rel="alternate" hreflang={lang} href={Astro.url.pathname}>
     <link rel="alternate" hreflang={otherLang} href={otherPath}>
     <link rel="alternate" hreflang="x-default" href="/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tom B.">
+    <meta property="og:title" content={pageTitle}>
+    <meta property="og:description" content={pageDescription}>
+    <meta property="og:url" content={Astro.url.href}>
+    <meta property="og:image" content={ogImage}>
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content={ogLocale}>
+    <meta property="og:locale:alternate" content={otherOgLocale}>
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={pageTitle}>
+    <meta name="twitter:description" content={pageDescription}>
+    <meta name="twitter:image" content={ogImage}>
   </head>
   <body class="flex min-h-dvh flex-col bg-cream text-ink">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-cream focus:px-4 focus:py-2 focus:text-xs focus:tracking-[0.3em] focus:text-ink focus:uppercase focus:outline focus:outline-2 focus:outline-clay"
+    >
+      {t.skipToContent}
+    </a>
     <SmoothScroll client:load />
     <ScrollRail client:load lang={lang} />
-    <main class="flex-1">
+    <main id="main" tabindex="-1" class="flex-1 focus:outline-none">
       <slot />
     </main>
-    <Footer client:visible lang={lang} />
+    <Footer client:visible lang={lang} frHref={frHref} enHref={enHref} />
   </body>
 </html>
