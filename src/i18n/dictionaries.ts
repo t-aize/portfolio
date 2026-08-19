@@ -88,7 +88,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
     about: {
       eyebrow: "À propos",
       paragraph:
-        "Étudiant en BTS SIO option SLAM, autodidacte en développement backend depuis plus de cinq ans. Je travaille surtout en TypeScript et Node.js, avec un faible pour les systèmes temps réel. La plupart des projets ci-dessous sont nés de cet intérêt plutôt que d'un besoin précis.",
+        "Je code depuis plus de sept ans : Scratch en CM2 pour commencer, puis plus sérieusement en autodidacte, surtout en TypeScript et Node.js, avec un faible pour les systèmes temps réel. Aujourd'hui en 2ᵉ année de BTS SIO option SLAM. La plupart des projets ci-dessous sont nés de cet intérêt plutôt que d'un besoin précis.",
     },
     projects: {
       eyebrow: "Projets",
@@ -107,7 +107,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
       eyebrow: "Expérience",
       titles: {
         mairie: "Support informatique",
-        nyxo: "nyxo.js",
+        nyxo: "Nyxo.js",
         freelance: "Développement freelance",
         alstom: "Stage développeur",
       },
@@ -123,7 +123,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
         nyxo: "Package TypeScript open source pour construire des bots Discord, pensé pour couvrir l'API en profondeur plutôt que la contourner. Discontinué depuis, mais c'est là-dessus que je me suis vraiment formé, plus de deux ans durant.",
         freelance: "Sites web fullstack pour des clients, en indépendant.",
         alstom:
-          "Chez Alstom : refonte du monitoring réseau ODM Monitoring Alstom (voir Projets), puis mission d'assistance technique — remplacement de postes et support matériel.",
+          "Chez Alstom : refonte du monitoring réseau ODM Monitoring Alstom (voir Projets), puis mission d'assistance technique : remplacement de postes et support matériel.",
       },
     },
     footer: {
@@ -230,7 +230,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
     about: {
       eyebrow: "About",
       paragraph:
-        "BTS SIO (SLAM) student, self-taught backend developer for over five years. I mostly work in TypeScript and Node.js, with a soft spot for real-time systems. Most of the projects below grew out of that interest rather than an actual need.",
+        "I've been coding for over seven years now: Scratch in primary school to start, then more seriously self-taught, mostly in TypeScript and Node.js, with a soft spot for real-time systems. Now in my second year of BTS SIO (SLAM). Most of the projects below grew out of that interest rather than an actual need.",
     },
     projects: {
       eyebrow: "Projects",
@@ -249,7 +249,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
       eyebrow: "Experience",
       titles: {
         mairie: "IT Support",
-        nyxo: "nyxo.js",
+        nyxo: "Nyxo.js",
         freelance: "Freelance Development",
         alstom: "Developer Internship",
       },
@@ -265,7 +265,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
         nyxo: "An open-source TypeScript package for building Discord bots, built to cover the API in depth rather than paper over it. Discontinued now, but it's what I actually learned backend development on, over more than two years.",
         freelance: "Full-stack websites for clients, as an independent freelancer.",
         alstom:
-          "At Alstom: rebuilt the ODM Monitoring Alstom network monitoring tool (see Projects), then moved into technical-assistant duties — workstation replacements and hardware support.",
+          "At Alstom: rebuilt the ODM Monitoring Alstom network monitoring tool (see Projects), then moved into technical-assistant duties: workstation replacements and hardware support.",
       },
     },
     footer: {
@@ -292,7 +292,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
       title: "Post-quantum cryptography",
       intro: [
         "In August 2024, NIST turned a decade of theoretical research into concrete federal standards: FIPS 203, 204, and 205. What used to be an academic conference topic became, overnight, a compliance obligation for anyone protecting long-lived data.",
-        "The stakes fit in one phrase: \"harvest now, decrypt later.\" Traffic encrypted today with classical algorithms (RSA, ECC) can be intercepted and stored as-is, waiting for a sufficiently powerful quantum computer to decrypt it retroactively. Migrating before that day isn't optional — it's a race against a threat with no confirmed deadline.",
+        "The stakes fit in one phrase: \"harvest now, decrypt later.\" Traffic encrypted today with classical algorithms (RSA, ECC) can be intercepted and stored as-is, waiting for a sufficiently powerful quantum computer to decrypt it retroactively. Migrating before that day isn't optional: it's a race against a threat with no confirmed deadline.",
       ],
       algorithms: {
         heading: "The algorithms",
@@ -303,7 +303,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
         },
         descriptions: {
           mlkem:
-            "Establishes a shared secret between two parties — the post-quantum equivalent of Diffie-Hellman key exchange. Lattice-based, and the fastest of the three, which is why it's already the one deployed in TLS and encrypted messaging.",
+            "Establishes a shared secret between two parties, the post-quantum equivalent of Diffie-Hellman key exchange. Lattice-based, and the fastest of the three, which is why it's already the one deployed in TLS and encrypted messaging.",
           mldsa:
             "A digital signature scheme derived from CRYSTALS-Dilithium, also lattice-based. Larger signatures than RSA (up to 4.6 KB), but the default candidate for document and certificate authentication.",
           slhdsa:

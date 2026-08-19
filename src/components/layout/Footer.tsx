@@ -74,7 +74,11 @@ export function Footer({ lang, frHref, enHref }: Props) {
           </span>
           <button
             type="button"
-            onClick={() => getLenis()?.scrollTo(0, { duration: SCROLL_DURATION })}
+            onClick={() => {
+              const lenis = getLenis();
+              if (lenis) lenis.scrollTo(0, { duration: SCROLL_DURATION });
+              else window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className="inline-flex items-center gap-1 transition-colors hover:text-clay"
           >
             {t.footer.backToTop}
