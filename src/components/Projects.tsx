@@ -1,43 +1,7 @@
 import { useRef } from "react";
+import { type ProjectData, projects } from "~/data/projects";
+import { dictionaries, type Lang } from "~/i18n/dictionaries";
 import { gsap, useGSAP } from "~/lib/gsap";
-
-interface Project {
-  title: string;
-  description: string;
-  stack: string[];
-  href: string | null;
-}
-
-const projects: Project[] = [
-  {
-    title: "ODM Monitoring Alstom",
-    description:
-      "Monitoring réseau temps réel d'un site industriel : carte interactive, diagnostic ping ICMP, flux live SSE.",
-    stack: ["Next.js", "tRPC", "Drizzle", "SQLite"],
-    href: null,
-  },
-  {
-    title: "Aurum",
-    description:
-      "Panel de trading terminal pour l'or (XAUUSD), ordres exécutés en direct via le MCP cTrader, structure de marché calculée en local.",
-    stack: ["Bun", "TypeScript", "OpenTUI", "Effect"],
-    href: null,
-  },
-  {
-    title: "Zen",
-    description:
-      "Bot Discord multi-usage : modération, utilitaires, commandes chargées dynamiquement par catégorie.",
-    stack: ["Bun", "TypeScript", "Seyfert"],
-    href: null,
-  },
-  {
-    title: "Borning Challenge",
-    description:
-      "Plateforme web pour le challenge multisport interne d'Alstom, développée en stage à Charleroi.",
-    stack: ["FastAPI", "Flutter", "MongoDB"],
-    href: "https://github.com/t-aize/borning-challenge",
-  },
-];
 
 /**
  * The project list as an index, not a card grid: a table of contents for
@@ -48,7 +12,8 @@ const projects: Project[] = [
  * Rows fade/lift in on scroll, staggered, mirroring the hero's entrance
  * without repeating it (no char-split, just the same restraint).
  */
-export function Projects() {
+export function Projects({ lang }: { lang: Lang }) {
+  const t = dictionaries[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const rowRefs = useRef<(HTMLElement | null)[]>([]);
 
@@ -94,14 +59,18 @@ export function Projects() {
             作品
           </span>
           <span aria-hidden="true" className="h-px flex-1 bg-stone/60" />
-          <span className="text-xs tracking-[0.35em] text-taupe uppercase">Projets</span>
+          <span className="text-xs tracking-[0.35em] text-taupe uppercase">
+            {t.projects.eyebrow}
+          </span>
         </div>
 
         <ol className="flex flex-col">
           {projects.map((project, index) => (
-            <li key={project.title}>
+            <li key={project.id}>
               <ProjectRow
                 project={project}
+                description={t.projects.descriptions[project.id]}
+                labels={{ github: t.projects.github, private: t.projects.private }}
                 index={index}
                 ref={(el) => {
                   rowRefs.current[index] = el;
@@ -117,10 +86,14 @@ export function Projects() {
 
 function ProjectRow({
   project,
+  description,
+  labels,
   index,
   ref,
 }: {
-  project: Project;
+  project: ProjectData;
+  description: string;
+  labels: { github: string; private: string };
   index: number;
   ref: React.Ref<HTMLElement>;
 }) {
@@ -144,10 +117,10 @@ function ProjectRow({
                 : "text-xs tracking-[0.25em] text-stone uppercase"
             }
           >
-            {project.href ? "GitHub ↗" : "Privé"}
+            {project.href ? labels.github : labels.private}
           </span>
         </div>
-        <p className="mt-2 max-w-xl text-sm text-taupe">{project.description}</p>
+        <p className="mt-2 max-w-xl text-sm text-taupe">{description}</p>
         <p className="mt-3 text-xs tracking-[0.25em] text-taupe/80 uppercase">
           {project.stack.join(" · ")}
         </p>

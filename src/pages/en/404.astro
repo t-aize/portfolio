@@ -2,16 +2,10 @@
 import { dictionaries } from "~/i18n/dictionaries";
 import Layout from "~/layouts/Layout.astro";
 
-const t = dictionaries.fr.notFound;
+const t = dictionaries.en.notFound;
 ---
 
-<!--
-  The 404 in the same voice as the hero's signature: a large serif
-  mark grounded on a hairline rule, a small tracked caption, stated
-  plainly, no illustration. "無" (mu, "nothing") stands in for the
-  missing page the way "完" closes the footer's colophon.
--->
-<Layout lang="fr" title={t.title}>
+<Layout lang="en" title={t.title}>
   <div class="flex min-h-[70vh] flex-col items-center justify-center px-8 text-center sm:px-16">
     <span aria-hidden="true" class="font-serif text-sm text-taupe">無</span>
 
@@ -22,7 +16,7 @@ const t = dictionaries.fr.notFound;
     <p class="mt-4 text-xs tracking-[0.3em] text-taupe uppercase sm:text-sm">{t.caption}</p>
 
     <a
-      href="/"
+      href="/en"
       class="mt-10 text-xs tracking-[0.3em] text-taupe uppercase transition-colors hover:text-clay"
     >
       {t.back}

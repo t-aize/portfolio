@@ -1,24 +1,7 @@
 import { useRef } from "react";
+import { contactLinks } from "~/data/contact";
+import { dictionaries, type Lang } from "~/i18n/dictionaries";
 import { gsap, useGSAP } from "~/lib/gsap";
-
-interface ContactLink {
-  label: string;
-  description: string;
-  href: string;
-}
-
-const links: ContactLink[] = [
-  {
-    label: "GitHub",
-    description: "Code, projets personnels, contributions.",
-    href: "https://github.com/t-aize",
-  },
-  {
-    label: "LinkedIn",
-    description: "Parcours, expériences, mises à jour.",
-    href: "https://linkedin.com/in/tom-bialecki-464a65270",
-  },
-];
 
 /**
  * Contact, kept to the same restraint as everything above it: no form, no
@@ -28,7 +11,8 @@ const links: ContactLink[] = [
  * Same row list as Projects, reused rather than reinvented: number,
  * label, one line, external mark.
  */
-export function Contact() {
+export function Contact({ lang }: { lang: Lang }) {
+  const t = dictionaries[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const rowRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
@@ -74,12 +58,14 @@ export function Contact() {
             連絡
           </span>
           <span aria-hidden="true" className="h-px flex-1 bg-stone/60" />
-          <span className="text-xs tracking-[0.35em] text-taupe uppercase">Contact</span>
+          <span className="text-xs tracking-[0.35em] text-taupe uppercase">
+            {t.contact.eyebrow}
+          </span>
         </div>
 
         <ol className="flex flex-col">
-          {links.map((link, index) => (
-            <li key={link.label}>
+          {contactLinks.map((link, index) => (
+            <li key={link.id}>
               <a
                 ref={(el) => {
                   rowRefs.current[index] = el;
@@ -98,10 +84,10 @@ export function Contact() {
                       {link.label}
                     </h3>
                     <span className="text-xs tracking-[0.25em] text-taupe uppercase transition-colors group-hover:text-clay">
-                      Ouvrir ↗
+                      {t.contact.open}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-taupe">{link.description}</p>
+                  <p className="mt-2 text-sm text-taupe">{t.contact.descriptions[link.id]}</p>
                 </div>
               </a>
             </li>

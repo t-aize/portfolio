@@ -1,16 +1,17 @@
 import type { VirtualScrollData } from "lenis";
 import { useEffect, useRef, useState } from "react";
+import { dictionaries, type Lang } from "~/i18n/dictionaries";
 import { gsap, useGSAP } from "~/lib/gsap";
-import { getLenis, setVirtualScrollHandler } from "~/lib/lenis";
+import { getLenis, SCROLL_DURATION, setVirtualScrollHandler } from "~/lib/lenis";
 import { scrollStore } from "~/store/scroll";
 
 const EDGE_EPSILON = 0.02;
 
 // Below this, a wheel/touch tick is a trackpad tremor or an accidental
 // swipe, not "I meant to scroll". Only deltas past it can trigger the
-// snap. A mouse wheel notch clears this easily; a resting thumb on a
-// trackpad shouldn't.
-const WHEEL_SNAP_THRESHOLD = 6;
+// snap. Set high enough that a light or hesitant scroll passes through as
+// normal scrolling instead of firing the snap.
+const WHEEL_SNAP_THRESHOLD = 12;
 
 // How close a section's top edge has to sit to the viewport's top edge
 // (in px) to count as "currently filling the screen," and so a valid snap
@@ -55,7 +56,8 @@ function getNextSectionId(): string | undefined {
  * opt in by adding the attribute; nothing here needs to change as more
  * get added.
  */
-export function ScrollRail() {
+export function ScrollRail({ lang }: { lang: Lang }) {
+  const t = dictionaries[lang];
   const railRef = useRef<HTMLDivElement>(null);
   const upPathRef = useRef<SVGPathElement>(null);
   const downPathRef = useRef<SVGPathElement>(null);
@@ -85,7 +87,7 @@ export function ScrollRail() {
     const snapTo = (target: string) => {
       snappingRef.current = true;
       getLenis()?.scrollTo(target, {
-        duration: 1.8,
+        duration: SCROLL_DURATION,
         lock: true,
         onComplete: () => {
           snappingRef.current = false;
@@ -174,11 +176,11 @@ export function ScrollRail() {
     >
       <button
         type="button"
-        aria-label="Revenir en haut"
+        aria-label={t.rail.up}
         disabled={atTop}
         onClick={(e) => {
           nudge(e.currentTarget, -4);
-          getLenis()?.scrollTo("#hero", { duration: 1.8 });
+          getLenis()?.scrollTo("#hero", { duration: SCROLL_DURATION });
         }}
         className="pointer-events-auto flex h-8 w-8 items-center justify-center text-stone transition-colors enabled:hover:text-clay disabled:cursor-default"
       >
@@ -194,12 +196,12 @@ export function ScrollRail() {
 
       <button
         type="button"
-        aria-label="Découvrir la suite"
+        aria-label={t.rail.down}
         disabled={atBottom}
         onClick={(e) => {
           nudge(e.currentTarget, 4);
           const next = getNextSectionId();
-          getLenis()?.scrollTo(next ? `#${next}` : "#about", { duration: 1.8 });
+          getLenis()?.scrollTo(next ? `#${next}` : "#about", { duration: SCROLL_DURATION });
         }}
         className="pointer-events-auto flex h-8 w-8 items-center justify-center text-stone transition-colors enabled:hover:text-clay disabled:cursor-default"
       >

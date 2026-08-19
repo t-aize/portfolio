@@ -1,14 +1,58 @@
 ---
-import { About } from "~/components/About.tsx";
-import { Contact } from "~/components/Contact.tsx";
-import { Hero } from "~/components/Hero.tsx";
-import { Projects } from "~/components/Projects.tsx";
-import Layout from "~/layouts/Layout.astro";
+// Host-agnostic entry point: no server, no edge runtime, works on any
+// static host. "/" itself carries no content — it's a bare shell that
+// swaps to /fr or /en client-side, based on a `lang` cookie set by the
+// footer's language switch (src/components/layout/Footer.astro) or,
+// failing that, the visitor's browser language. The <noscript> fallback
+// and hreflang tags below keep it usable without JS and legible to
+// crawlers (see https://developers.google.com/search/docs/specialty/international/localized-versions
+// for the pattern).
 ---
 
-<Layout>
-  <Hero client:load />
-  <About client:visible />
-  <Projects client:visible />
-  <Contact client:visible />
-</Layout>
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Tom B. · Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="alternate" hreflang="fr" href="/fr">
+    <link rel="alternate" hreflang="en" href="/en">
+    <link rel="alternate" hreflang="x-default" href="/">
+  </head>
+  <body class="flex min-h-dvh items-center justify-center bg-cream text-ink">
+    <noscript>
+      <p class="text-sm text-taupe">
+        <a href="/fr" class="underline hover:text-clay">Français</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/en" class="underline hover:text-clay">English</a>
+      </p>
+    </noscript>
+
+    <script>
+    const SUPPORTED = ["fr", "en"] as const;
+    const DEFAULT_LOCALE = "fr";
+
+    function readCookie(name: string): string | null {
+      const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+      return match ? decodeURIComponent(match[1]) : null;
+    }
+
+    function preferredLocale(): string {
+      const cookie = readCookie("lang");
+      if (cookie && (SUPPORTED as readonly string[]).includes(cookie)) return cookie;
+
+      const browserLangs = navigator.languages?.length ? navigator.languages : [navigator.language];
+      for (const lang of browserLangs) {
+        const primary = lang?.split("-")[0]?.toLowerCase();
+        if (primary && (SUPPORTED as readonly string[]).includes(primary)) return primary;
+      }
+
+      return DEFAULT_LOCALE;
+    }
+
+    location.replace(`/${preferredLocale()}`);
+    </script>
+  </body>
+</html>

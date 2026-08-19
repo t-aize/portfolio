@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { dictionaries, type Lang } from "~/i18n/dictionaries";
 import { gsap, useGSAP } from "~/lib/gsap";
 
 /**
@@ -9,7 +10,8 @@ import { gsap, useGSAP } from "~/lib/gsap";
  * faintly into the corner of a page rather than announced. A soft ink
  * wash blooms in first, then the text settles on top of it.
  */
-export function About() {
+export function About({ lang }: { lang: Lang }) {
+  const t = dictionaries[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const bloomRef = useRef<HTMLDivElement>(null);
   const paraRefs = useRef<(HTMLParagraphElement | null)[]>([]);
@@ -77,7 +79,7 @@ export function About() {
       />
 
       <div className="relative mx-auto max-w-2xl">
-        <span className="text-xs tracking-[0.35em] text-taupe uppercase">À propos</span>
+        <span className="text-xs tracking-[0.35em] text-taupe uppercase">{t.about.eyebrow}</span>
 
         <p
           ref={(el) => {
@@ -85,10 +87,7 @@ export function About() {
           }}
           className="mt-6 text-base leading-relaxed text-taupe sm:mt-8 sm:text-lg"
         >
-          Étudiant en BTS SIO option SLAM, autodidacte en développement backend depuis plus de cinq
-          ans. Je travaille surtout en TypeScript et Node.js, avec un faible pour les systèmes temps
-          réel. La plupart des projets ci-dessous sont nés de cet intérêt plutôt que d'un besoin
-          précis.
+          {t.about.paragraph}
         </p>
       </div>
     </section>

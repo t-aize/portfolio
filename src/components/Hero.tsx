@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { dictionaries, type Lang } from "~/i18n/dictionaries";
 import { gsap, SplitText, useGSAP } from "~/lib/gsap";
 
 /**
@@ -12,7 +13,8 @@ import { gsap, SplitText, useGSAP } from "~/lib/gsap";
  * out, the caption settles last. No full-screen gate, just an in-place
  * reveal.
  */
-export function Hero() {
+export function Hero({ lang }: { lang: Lang }) {
+  const t = dictionaries[lang];
   const containerRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
@@ -81,7 +83,7 @@ export function Hero() {
           ref={subtitleRef}
           className="mt-4 text-xs tracking-[0.3em] text-taupe uppercase sm:text-sm"
         >
-          Développeur backend
+          {t.hero.subtitle}
         </p>
       </div>
     </section>
