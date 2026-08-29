@@ -1,5 +1,6 @@
 ---
 import { About } from "~/components/About.tsx";
+import { Contact } from "~/components/Contact.tsx";
 import { Experience } from "~/components/Experience.tsx";
 import { Hero } from "~/components/Hero.tsx";
 import { Projects } from "~/components/Projects.tsx";
@@ -18,4 +19,5 @@ const { lang } = Astro.props;
   <About client:visible lang={lang} />
   <Projects client:visible lang={lang} />
   <Experience client:visible lang={lang} />
+  <Contact client:visible lang={lang} />
 </Layout>

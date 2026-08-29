@@ -30,10 +30,14 @@ interface Dictionary {
     periods: Record<string, string>;
     descriptions: Record<string, string>;
   };
+  contact: {
+    emailAria: string;
+  };
   footer: {
     navAria: string;
     backToTop: string;
     veille: string;
+    moreLabel: string;
   };
   notFound: {
     title: string;
@@ -127,10 +131,14 @@ export const dictionaries: Record<Lang, Dictionary> = {
           "Chez Alstom : refonte du monitoring réseau ODM Monitoring Alstom (voir Projets), puis mission d'assistance technique : remplacement de postes et support matériel.",
       },
     },
+    contact: {
+      emailAria: "Envoyer un e-mail à Tom B.",
+    },
     footer: {
       navAria: "Liens",
       backToTop: "Haut de page",
       veille: "Veille techno",
+      moreLabel: "Liens",
     },
     notFound: {
       title: "404 · Tom B. · Portfolio",
@@ -270,10 +278,14 @@ export const dictionaries: Record<Lang, Dictionary> = {
           "At Alstom: rebuilt the ODM Monitoring Alstom network monitoring tool (see Projects), then moved into technical-assistant duties: workstation replacements and hardware support.",
       },
     },
+    contact: {
+      emailAria: "Send an email to Tom B.",
+    },
     footer: {
       navAria: "Links",
       backToTop: "Back to top",
       veille: "Tech watch",
+      moreLabel: "Links",
     },
     notFound: {
       title: "404 · Tom B. · Portfolio",
