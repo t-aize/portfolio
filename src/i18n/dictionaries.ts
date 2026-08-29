@@ -76,7 +76,8 @@ export const dictionaries: Record<Lang, Dictionary> = {
   fr: {
     meta: {
       title: "Tom B. · Portfolio",
-      description: "Portfolio de développeur backend.",
+      description:
+        "Développeur backend autodidacte (TypeScript, Node.js), passionné de systèmes temps réel. Actuellement en BTS SIO SLAM. Projets, expérience et veille technique.",
     },
     hero: {
       subtitle: "Développeur backend",
@@ -218,7 +219,8 @@ export const dictionaries: Record<Lang, Dictionary> = {
   en: {
     meta: {
       title: "Tom B. · Portfolio",
-      description: "Backend developer portfolio.",
+      description:
+        "Self-taught backend developer (TypeScript, Node.js) focused on real-time systems, currently in a BTS SIO (SLAM) program. Projects, experience, and tech watch.",
     },
     hero: {
       subtitle: "Backend developer",

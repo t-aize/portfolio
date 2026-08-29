@@ -1,0 +1,76 @@
+---
+import { ArrowLeft } from "lucide-react";
+import Layout from "~/layouts/Layout.astro";
+
+// French-only by nature (LCEN is French law) — no English counterpart,
+// hence `translated={false}` below rather than a bogus /en/mentions-legales.
+const title = "Mentions légales · Tom B. · Portfolio";
+const description =
+  "Mentions légales du portfolio de Tom B., conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique.";
+---
+
+<Layout lang="fr" title={title} description={description} translated={false}>
+  <article class="mx-auto max-w-3xl px-8 py-16 sm:px-16 sm:py-24">
+    <a
+      href="/fr"
+      class="inline-flex items-center gap-1 text-xs tracking-[0.3em] text-taupe uppercase transition-colors hover:text-clay"
+    >
+      <ArrowLeft aria-hidden="true" size={12} strokeWidth={1.5} />
+      Retour à l'accueil
+    </a>
+
+    <div class="mt-10 sm:mt-14">
+      <div class="flex items-center gap-4">
+        <span aria-hidden="true" class="font-serif text-base text-taupe">法</span>
+        <span aria-hidden="true" class="h-px flex-1 bg-stone/60"></span>
+        <span class="text-xs tracking-[0.35em] text-taupe uppercase">Informations légales</span>
+      </div>
+
+      <h1 class="mt-6 font-serif text-4xl leading-tight text-ink sm:text-5xl">Mentions légales</h1>
+    </div>
+
+    <div class="mt-16 flex flex-col sm:mt-20">
+      <section class="border-b border-stone/60 py-8 first:pt-0">
+        <h2 class="text-xs tracking-[0.35em] text-taupe uppercase">Éditeur du site</h2>
+        <p class="mt-4 max-w-xl text-sm leading-relaxed text-taupe sm:text-base">
+          Ce site est un portfolio personnel, à but non professionnel, édité par Tom B. Conformément
+          à l'article 6-III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie
+          numérique, l'éditeur étant une personne physique n'agissant pas à titre professionnel, son
+          identité complète (nom, domicile) n'est pas publiée ici : elle est conservée par
+          l'hébergeur et communicable sur demande à l'autorité judiciaire.
+        </p>
+        <p class="mt-4 text-sm leading-relaxed text-taupe sm:text-base">
+          Contact :
+          <a
+            href="mailto:tom.bialecki2211@gmail.com"
+            class="underline transition-colors hover:text-clay"
+            >tom.bialecki2211@gmail.com</a
+          >
+        </p>
+      </section>
+
+      <section class="border-b border-stone/60 py-8">
+        <h2 class="text-xs tracking-[0.35em] text-taupe uppercase">Directeur de la publication</h2>
+        <p class="mt-4 max-w-xl text-sm leading-relaxed text-taupe sm:text-base">Tom B.</p>
+      </section>
+
+      <section class="border-b border-stone/60 py-8">
+        <h2 class="text-xs tracking-[0.35em] text-taupe uppercase">Hébergement</h2>
+        <p class="mt-4 max-w-xl text-sm leading-relaxed text-taupe sm:text-base">
+          Vercel Inc.<br>
+          440 N Barranca Avenue #4133<br>
+          Covina, CA 91723, États-Unis
+        </p>
+      </section>
+
+      <section class="py-8 last:border-b-0">
+        <h2 class="text-xs tracking-[0.35em] text-taupe uppercase">Propriété intellectuelle</h2>
+        <p class="mt-4 max-w-xl text-sm leading-relaxed text-taupe sm:text-base">
+          L'ensemble des contenus de ce site (textes, code, mise en forme) est la propriété de son
+          éditeur, sauf mention contraire. Toute reproduction sans autorisation préalable est
+          interdite.
+        </p>
+      </section>
+    </div>
+  </article>
+</Layout>

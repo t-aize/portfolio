@@ -11,9 +11,15 @@ interface Props {
   lang: Lang;
   title?: string;
   description?: string;
+  // False for a page that only exists in one locale (e.g. /fr/mentions-legales,
+  // a French legal-notice page with no English counterpart). Suppresses the
+  // hreflang alternate block below and points the footer's other-language
+  // link at that locale's homepage instead of a same-path swap that would
+  // 404.
+  translated?: boolean;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, translated = true } = Astro.props;
 const t = dictionaries[lang];
 const pageTitle = title ?? t.meta.title;
 const pageDescription = description ?? t.meta.description;
@@ -24,7 +30,9 @@ const pageDescription = description ?? t.meta.description;
 // from. Path-preserving (swaps just the locale segment) so it stays
 // correct on every page, not just the homepage.
 const otherLang: Lang = lang === "fr" ? "en" : "fr";
-const otherPath = Astro.url.pathname.replace(/^\/(fr|en)/, `/${otherLang}`);
+const otherPath = translated
+  ? Astro.url.pathname.replace(/^\/(fr|en)/, `/${otherLang}`)
+  : `/${otherLang}`;
 const frHref = lang === "fr" ? Astro.url.pathname : otherPath;
 const enHref = lang === "en" ? Astro.url.pathname : otherPath;
 
@@ -55,9 +63,13 @@ const personJsonLd = {
     <link rel="icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="alternate" hreflang={lang} href={Astro.url.pathname}>
-    <link rel="alternate" hreflang={otherLang} href={otherPath}>
-    <link rel="alternate" hreflang="x-default" href="/">
+    {translated && (
+        <>
+          <link rel="alternate" hreflang={lang} href={Astro.url.pathname} />
+          <link rel="alternate" hreflang={otherLang} href={otherPath} />
+          <link rel="alternate" hreflang="x-default" href="/" />
+        </>
+      )}
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Tom B.">

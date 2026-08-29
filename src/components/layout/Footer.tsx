@@ -69,6 +69,16 @@ export function Footer({ lang, frHref, enHref }: Props) {
           <a href={`/${lang}/veille`} className="transition-colors hover:text-clay">
             {t.footer.veille}
           </a>
+          {lang === "fr" && (
+            <>
+              <span aria-hidden="true" className="text-stone">
+                ·
+              </span>
+              <a href="/fr/mentions-legales" className="transition-colors hover:text-clay">
+                Mentions légales
+              </a>
+            </>
+          )}
           <span aria-hidden="true" className="text-stone">
             ·
           </span>
