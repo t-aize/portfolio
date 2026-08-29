@@ -115,7 +115,7 @@ function ProjectRow({
             className={
               project.href
                 ? "inline-flex items-center gap-1 text-xs tracking-[0.25em] text-taupe uppercase transition-colors group-hover:text-clay"
-                : "text-xs tracking-[0.25em] text-stone uppercase"
+                : "text-xs tracking-[0.25em] text-taupe uppercase"
             }
           >
             {project.href ? (
@@ -129,7 +129,7 @@ function ProjectRow({
           </span>
         </div>
         <p className="mt-2 max-w-xl text-sm text-taupe">{description}</p>
-        <p className="mt-3 text-xs tracking-[0.25em] text-taupe/80 uppercase">
+        <p className="mt-3 text-xs tracking-[0.25em] text-taupe uppercase">
           {project.stack.join(" · ")}
         </p>
       </div>

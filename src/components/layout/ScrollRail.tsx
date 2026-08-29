@@ -119,7 +119,7 @@ export function ScrollRail({ lang }: { lang: Lang }) {
           nudge(e.currentTarget, -4);
           getLenis()?.scrollTo("#hero", { duration: SCROLL_DURATION });
         }}
-        className="pointer-events-auto flex h-8 w-8 items-center justify-center text-stone transition-colors enabled:hover:text-clay disabled:cursor-default"
+        className="pointer-events-auto flex h-8 w-8 items-center justify-center text-taupe transition-colors enabled:hover:text-clay disabled:cursor-default"
       >
         <RailIcon pathRef={upPathRef} />
       </button>
@@ -144,7 +144,7 @@ export function ScrollRail({ lang }: { lang: Lang }) {
           // arbitrary earlier section.
           getLenis()?.scrollTo(next ? `#${next}` : "bottom", { duration: SCROLL_DURATION });
         }}
-        className="pointer-events-auto flex h-8 w-8 items-center justify-center text-stone transition-colors enabled:hover:text-clay disabled:cursor-default"
+        className="pointer-events-auto flex h-8 w-8 items-center justify-center text-taupe transition-colors enabled:hover:text-clay disabled:cursor-default"
       >
         <RailIcon pathRef={downPathRef} />
       </button>

@@ -133,7 +133,7 @@ export function Veille({ lang }: { lang: Lang }) {
             <p className="mt-2 max-w-xl text-sm text-taupe">
               {t.veille.algorithms.descriptions[algo.id]}
             </p>
-            <p className="mt-3 text-xs tracking-[0.25em] text-taupe/80 uppercase">{algo.fipsRef}</p>
+            <p className="mt-3 text-xs tracking-[0.25em] text-taupe uppercase">{algo.fipsRef}</p>
           </div>
         ))}
       </div>

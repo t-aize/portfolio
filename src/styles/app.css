@@ -16,12 +16,19 @@
   /* Display only: the one ornamental voice on the page, used sparingly. */
   --font-serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
 
-  /* Palette coolors.co/463f3a-8a817c-bcb8b1-f4f3ee-e0afa0 */
+  /* Palette coolors.co/463f3a-8a817c-bcb8b1-f4f3ee-e0afa0, --color-taupe
+     darkened from the original #8a817c: at that value taupe-on-cream body
+     text measured ~3.3:1, below WCAG AA's 4.5:1 floor for normal text.
+     #706760 clears it with margin (~4.9:1) while staying the same warm
+     neutral. --color-stone and --color-clay stay at their original,
+     lighter values — both are decorative-only now (hairlines, hover
+     accents), never body text, so they aren't held to the text contrast
+     floor. */
   --color-cream: #f3f0e7; /* fond principal */
   --color-ink: #463f3a; /* texte, et fond des sections sombres (avec text-cream) */
-  --color-taupe: #8a817c; /* texte secondaire / bordures */
-  --color-stone: #bcb8b1; /* texte secondaire / bordures (alternative plus claire) */
-  --color-clay: #e0afa0; /* accent : CTA, liens, hover, hanko, curseur */
+  --color-taupe: #706760; /* texte secondaire (WCAG AA ~4.9:1 sur cream) */
+  --color-stone: #bcb8b1; /* décoratif seulement : bordures, séparateurs, icônes au repos */
+  --color-clay: #e0afa0; /* accent décoratif seulement : hover, hanko, curseur */
 }
 
 @layer base {
@@ -82,5 +89,19 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-clay);
+  }
+
+  /*
+   * One visible-focus rule for every interactive element on the site,
+   * rather than a `focus-visible:` utility repeated on each button/link.
+   * Ink over clay: ink-on-cream measures ~9:1, clay-on-cream only ~1.7:1
+   * (well under the 3:1 WCAG floor for UI component boundaries), so ink
+   * is the only palette color that reads as a real focus ring here.
+   * `:focus-visible` (not `:focus`) so it shows for keyboard nav only,
+   * not on a mouse click.
+   */
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
   }
 }
