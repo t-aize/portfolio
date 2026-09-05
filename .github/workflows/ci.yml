@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
 
       - name: Install pnpm, Node.js & dependencies
-        uses: pnpm/setup@v2.0.2
+        uses: pnpm/setup@v2.1.0
         with:
           runtime: node@22
           cache: true
