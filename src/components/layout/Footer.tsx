@@ -222,6 +222,16 @@ export function Footer({ lang, frHref, enHref }: Props) {
           </div>
         </nav>
       </div>
+
+      {/* Closing device mirroring the devstudio-footer pattern (the
+          site's own name, huge and barely-there, bleeding off the
+          bottom edge) — same idea as About/Experience's oversized
+          watermark kanji, just spelled out and placed here instead. */}
+      <div aria-hidden="true" className="mt-12 -mb-6 overflow-hidden select-none sm:-mb-10">
+        <p className="translate-y-[20%] text-center font-serif text-[4rem] leading-none text-ink/[0.06] sm:text-[8rem] md:text-[10rem]">
+          Tom B.
+        </p>
+      </div>
     </footer>
   );
 }
