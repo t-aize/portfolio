@@ -60,8 +60,9 @@ $RECYCLE.BIN/
 *~
 .directory
 
-# Claude Code skill-management artifact, not project content
+# Claude Code skill-management artifacts, not project content
 skills-lock.json
+.claude/
 
 # editors
 .idea/
