@@ -79,7 +79,10 @@ export function About({ lang }: { lang: Lang }) {
       />
 
       <div className="relative mx-auto max-w-2xl">
-        <span className="text-xs tracking-[0.35em] text-taupe uppercase">{t.about.eyebrow}</span>
+        <div className="flex items-center gap-4">
+          <span aria-hidden="true" className="h-px flex-1 bg-stone/60" />
+          <span className="text-xs tracking-[0.35em] text-taupe uppercase">{t.about.eyebrow}</span>
+        </div>
 
         <p
           ref={(el) => {
