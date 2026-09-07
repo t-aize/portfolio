@@ -129,9 +129,16 @@ function ProjectRow({
           </span>
         </div>
         <p className="mt-2 max-w-xl text-sm text-taupe">{description}</p>
-        <p className="mt-3 text-xs tracking-[0.25em] text-taupe uppercase">
-          {project.stack.join(" · ")}
-        </p>
+        <ul className="mt-3 flex flex-wrap gap-1.5">
+          {project.stack.map((tech) => (
+            <li
+              key={tech}
+              className="rounded-full border border-stone/50 px-2.5 py-0.5 text-[10px] tracking-[0.2em] text-taupe uppercase transition-colors group-hover:border-clay/50"
+            >
+              {tech}
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   );

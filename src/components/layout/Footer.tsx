@@ -109,9 +109,7 @@ export function Footer({ lang, frHref, enHref }: Props) {
             <GithubMark className="h-3 w-3" />
             @t-aize
           </a>
-          <span aria-hidden="true" className="text-stone">
-            ·
-          </span>
+          <span aria-hidden="true" className="h-3 w-px bg-stone/60" />
           <a
             href="https://linkedin.com/in/tom-bialecki-464a65270"
             target="_blank"
@@ -121,25 +119,19 @@ export function Footer({ lang, frHref, enHref }: Props) {
             <LinkedinMark className="h-3 w-3" />
             tom-bialecki
           </a>
-          <span aria-hidden="true" className="text-stone">
-            ·
-          </span>
+          <span aria-hidden="true" className="h-3 w-px bg-stone/60" />
           <a href={`/${lang}/veille`} className="transition-colors hover:text-clay">
             {t.footer.veille}
           </a>
           {lang === "fr" && (
             <>
-              <span aria-hidden="true" className="text-stone">
-                ·
-              </span>
+              <span aria-hidden="true" className="h-3 w-px bg-stone/60" />
               <a href="/fr/mentions-legales" className="transition-colors hover:text-clay">
                 Mentions légales
               </a>
             </>
           )}
-          <span aria-hidden="true" className="text-stone">
-            ·
-          </span>
+          <span aria-hidden="true" className="h-3 w-px bg-stone/60" />
           <button
             type="button"
             onClick={scrollToTop}

@@ -52,6 +52,13 @@
     cursor: pointer;
   }
 
+  /* Avoids the ~300ms double-tap-to-zoom delay some mobile browsers still
+     apply to plain taps on links and buttons. */
+  a,
+  button {
+    touch-action: manipulation;
+  }
+
   /*
    * Restyled, not removed. A hidden scrollbar removes the one visual cue
    * that says "there's more below," which works against the site's own
@@ -103,5 +110,21 @@
   :focus-visible {
     outline: 2px solid var(--color-ink);
     outline-offset: 2px;
+  }
+
+  /* A fixed, pointer-events-none grain layer: breaks up the flat cream
+     fields across the large text-only sections without touching layout
+     or motion. Feeds an inline SVG turbulence filter rather than a
+     bitmap, so it costs no extra asset request. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
   }
 }
