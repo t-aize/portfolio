@@ -2,7 +2,6 @@
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import { Footer } from "~/components/layout/Footer.tsx";
-import { ScrollRail } from "~/components/layout/ScrollRail.tsx";
 import { SmoothScroll } from "~/components/layout/SmoothScroll.tsx";
 import { dictionaries, type Lang } from "~/i18n/dictionaries";
 import "~/styles/app.css";
@@ -97,7 +96,6 @@ const personJsonLd = {
       {t.skipToContent}
     </a>
     <SmoothScroll client:load />
-    <ScrollRail client:load lang={lang} />
     <main id="main" tabindex="-1" class="flex-1 focus:outline-none">
       <slot />
     </main>

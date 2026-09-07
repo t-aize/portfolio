@@ -1,10 +1,7 @@
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "~/lib/gsap";
-import { scrollStore } from "~/store/scroll";
 
-// Shared duration for every programmatic scrollTo (rail buttons, footer
-// "back to top") so they stay in lockstep and can be tuned from one
-// place.
+// Duration for the footer's "back to top" programmatic scrollTo.
 export const SCROLL_DURATION = 1;
 
 let lenis: Lenis | null = null;
@@ -22,8 +19,7 @@ export function getLenis(): Lenis | null {
 
   lenis = new Lenis({ autoRaf: false });
 
-  lenis.on("scroll", ({ progress, velocity }) => {
-    scrollStore.setState({ progress, velocity });
+  lenis.on("scroll", () => {
     ScrollTrigger.update();
   });
 
