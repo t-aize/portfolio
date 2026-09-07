@@ -93,19 +93,19 @@ export const dictionaries: Record<Lang, Dictionary> = {
     about: {
       eyebrow: "À propos",
       paragraph:
-        "Je code depuis plus de sept ans : Scratch en CM2 pour commencer, puis plus sérieusement en autodidacte, surtout en TypeScript et Node.js, avec un faible pour les systèmes temps réel. Aujourd'hui en 2ᵉ année de BTS SIO option SLAM. La plupart des projets ci-dessous sont nés de cet intérêt plutôt que d'un besoin précis.",
+        "Je code depuis plus de sept ans : Scratch en CM2 pour commencer, puis plus sérieusement en autodidacte, surtout en TypeScript et Node.js, avec un faible pour les systèmes temps réel. Aujourd’hui en 2ᵉ année de BTS SIO option SLAM. La plupart des projets ci-dessous sont nés de cet intérêt plutôt que d’un besoin précis.",
     },
     projects: {
       eyebrow: "Projets",
       github: "GitHub",
       private: "Privé",
       descriptions: {
-        odm: "Monitoring réseau temps réel d'un site industriel : carte interactive, diagnostic ping ICMP, flux live SSE.",
+        odm: "Monitoring réseau temps réel d’un site industriel : carte interactive, diagnostic ping ICMP, flux live SSE.",
         aurum:
-          "Panel de trading terminal pour l'or (XAUUSD), ordres exécutés en direct via le MCP cTrader, structure de marché calculée en local.",
+          "Panel de trading terminal pour l’or (XAUUSD), ordres exécutés en direct via le MCP cTrader, structure de marché calculée en local.",
         zen: "Bot Discord multi-usage : modération, utilitaires, commandes chargées dynamiquement par catégorie.",
         borning:
-          "Plateforme web pour le challenge multisport interne d'Alstom, développée en stage à Charleroi.",
+          "Plateforme web pour le challenge multisport interne d’Alstom, développée en stage à Charleroi.",
       },
     },
     experience: {
@@ -125,10 +125,10 @@ export const dictionaries: Record<Lang, Dictionary> = {
       descriptions: {
         mairie:
           "Stage en mairie : maintenance matérielle, administration réseau, support technique de premier niveau.",
-        nyxo: "Package TypeScript open source pour construire des bots Discord, pensé pour couvrir l'API en profondeur plutôt que la contourner. Discontinué depuis, mais c'est là-dessus que je me suis vraiment formé, plus de deux ans durant.",
+        nyxo: "Package TypeScript open source pour construire des bots Discord, pensé pour couvrir l’API en profondeur plutôt que la contourner. Discontinué depuis, mais c’est là-dessus que je me suis vraiment formé, plus de deux ans durant.",
         freelance: "Sites web fullstack pour des clients, en indépendant.",
         alstom:
-          "Chez Alstom : refonte du monitoring réseau ODM Monitoring Alstom (voir Projets), puis mission d'assistance technique : remplacement de postes et support matériel.",
+          "Chez Alstom : refonte du monitoring réseau ODM Monitoring Alstom (voir Projets), puis mission d’assistance technique : remplacement de postes et support matériel.",
       },
     },
     contact: {
@@ -143,7 +143,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
     notFound: {
       title: "404 · Tom B. · Portfolio",
       caption: "Page introuvable",
-      back: "Retour à l'accueil",
+      back: "Retour à l’accueil",
     },
     langSwitch: {
       aria: "Changer de langue",
@@ -158,8 +158,8 @@ export const dictionaries: Record<Lang, Dictionary> = {
       eyebrow: "Veille technologique",
       title: "Cryptographie post-quantique",
       intro: [
-        "En août 2024, le NIST a transformé une décennie de recherche théorique en normes fédérales concrètes : FIPS 203, 204 et 205. Ce qui n'était qu'un sujet de conférence académique est devenu, du jour au lendemain, une obligation de mise en conformité pour quiconque protège des données à long terme.",
-        "L'enjeu tient en une phrase : « harvest now, decrypt later ». Un trafic chiffré aujourd'hui avec des algorithmes classiques (RSA, ECC) peut être intercepté et stocké tel quel, en attendant qu'un ordinateur quantique suffisamment puissant existe pour le déchiffrer rétroactivement. Migrer avant cette date n'est pas une option, c'est une course contre une menace qui n'a pas encore de date.",
+        "En août 2024, le NIST a transformé une décennie de recherche théorique en normes fédérales concrètes : FIPS 203, 204 et 205. Ce qui n’était qu’un sujet de conférence académique est devenu, du jour au lendemain, une obligation de mise en conformité pour quiconque protège des données à long terme.",
+        "L’enjeu tient en une phrase : « harvest now, decrypt later ». Un trafic chiffré aujourd’hui avec des algorithmes classiques (RSA, ECC) peut être intercepté et stocké tel quel, en attendant qu’un ordinateur quantique suffisamment puissant existe pour le déchiffrer rétroactivement. Migrer avant cette date n’est pas une option, c’est une course contre une menace qui n’a pas encore de date.",
       ],
       algorithms: {
         heading: "Les algorithmes retenus",
@@ -170,11 +170,11 @@ export const dictionaries: Record<Lang, Dictionary> = {
         },
         descriptions: {
           mlkem:
-            "Établit une clé secrète partagée entre deux parties, l'équivalent post-quantique de l'échange Diffie-Hellman. Fondé sur les réseaux euclidiens (lattices), c'est le plus rapide des trois, donc déjà déployé dans TLS et la messagerie chiffrée.",
+            "Établit une clé secrète partagée entre deux parties, l’équivalent post-quantique de l’échange Diffie-Hellman. Fondé sur les réseaux euclidiens (lattices), c’est le plus rapide des trois, donc déjà déployé dans TLS et la messagerie chiffrée.",
           mldsa:
-            "Signature numérique dérivée de CRYSTALS-Dilithium, elle aussi fondée sur les lattices. Signatures plus volumineuses que RSA (jusqu'à 4,6 Ko), mais candidat par défaut pour l'authentification de documents et de certificats.",
+            "Signature numérique dérivée de CRYSTALS-Dilithium, elle aussi fondée sur les lattices. Signatures plus volumineuses que RSA (jusqu’à 4,6 Ko), mais candidat par défaut pour l’authentification de documents et de certificats.",
           slhdsa:
-            "Signature à base de fonctions de hachage plutôt que de lattices : une hypothèse mathématique différente, choisie exprès comme filet de sécurité si les réseaux euclidiens s'avéraient un jour cassables. Plus lente et plus lourde (jusqu'à 50 Ko), réservée aux usages où la prudence prime sur la performance.",
+            "Signature à base de fonctions de hachage plutôt que de lattices : une hypothèse mathématique différente, choisie exprès comme filet de sécurité si les réseaux euclidiens s’avéraient un jour cassables. Plus lente et plus lourde (jusqu’à 50 Ko), réservée aux usages où la prudence prime sur la performance.",
         },
       },
       timeline: {
@@ -194,18 +194,18 @@ export const dictionaries: Record<Lang, Dictionary> = {
           y2024:
             "Publication des normes définitives FIPS 203 (ML-KEM), FIPS 204 (ML-DSA) et FIPS 205 (SLH-DSA).",
           y2025:
-            "HQC est retenu comme cinquième algorithme : un second mécanisme d'échange de clé fondé sur les codes correcteurs plutôt que sur les lattices, pour ne pas tout miser sur une seule famille mathématique.",
+            "HQC est retenu comme cinquième algorithme : un second mécanisme d’échange de clé fondé sur les codes correcteurs plutôt que sur les lattices, pour ne pas tout miser sur une seule famille mathématique.",
           y2027:
             "Échéance fixée par la NSA (CNSA 2.0) : tout nouveau système gouvernemental américain doit prendre en charge la cryptographie post-quantique.",
           y2030: "Fin de la période de transition prévue pour les systèmes existants.",
           y2035:
-            "Objectif de résistance quantique complète pour l'ensemble des systèmes de sécurité nationale américains.",
+            "Objectif de résistance quantique complète pour l’ensemble des systèmes de sécurité nationale américains.",
         },
       },
       adoption: {
         heading: "Adoption réelle",
         paragraph:
-          "Chrome, Edge et Firefox activent par défaut un échange de clé hybride (X25519MLKEM768, qui combine l'ancien et le nouveau standard) ; Signal et iMessage ont déjà basculé leurs protocoles. Chez Cloudflare, la part du trafic TLS chiffré en post-quantique est passée d'environ 2 % début 2024 à plus de 67 % en avril 2026, l'une des migrations cryptographiques les plus rapides jamais mesurées. Le décalage se situe côté entreprises : la plupart testent, peu ont basculé en production.",
+          "Chrome, Edge et Firefox activent par défaut un échange de clé hybride (X25519MLKEM768, qui combine l’ancien et le nouveau standard) ; Signal et iMessage ont déjà basculé leurs protocoles. Chez Cloudflare, la part du trafic TLS chiffré en post-quantique est passée d’environ 2 % début 2024 à plus de 67 % en avril 2026, l’une des migrations cryptographiques les plus rapides jamais mesurées. Le décalage se situe côté entreprises : la plupart testent, peu ont basculé en production.",
         stats: [
           { label: "Trafic TLS post-quantique chez Cloudflare, 2024 → 2026", value: "2 % → 67 %" },
           { label: "Entreprises en test vs entièrement déployées", value: "87 % / 7 %" },
@@ -217,11 +217,11 @@ export const dictionaries: Record<Lang, Dictionary> = {
           nist: "Le dossier de référence du processus de standardisation, algorithme par algorithme.",
           nsa: "Le calendrier de bascule imposé aux systèmes de sécurité nationale américains.",
           cloudflare:
-            "Des chiffres d'adoption réels, mesurés sur du trafic TLS en production plutôt qu'annoncés.",
+            "Des chiffres d’adoption réels, mesurés sur du trafic TLS en production plutôt qu’annoncés.",
           csa: "Une explication grand public de ce que change concrètement la finalisation des normes.",
         },
       },
-      backHome: "Retour à l'accueil",
+      backHome: "Retour à l’accueil",
     },
   },
   en: {
@@ -240,7 +240,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
     about: {
       eyebrow: "About",
       paragraph:
-        "I've been coding for over seven years now: Scratch in primary school to start, then more seriously self-taught, mostly in TypeScript and Node.js, with a soft spot for real-time systems. Now in my second year of BTS SIO (SLAM). Most of the projects below grew out of that interest rather than an actual need.",
+        "I’ve been coding for over seven years now: Scratch in primary school to start, then more seriously self-taught, mostly in TypeScript and Node.js, with a soft spot for real-time systems. Now in my second year of BTS SIO (SLAM). Most of the projects below grew out of that interest rather than an actual need.",
     },
     projects: {
       eyebrow: "Projects",
@@ -252,7 +252,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
           "Terminal trading panel for gold (XAUUSD), orders executed live via the cTrader MCP, market structure computed locally.",
         zen: "Multi-purpose Discord bot: moderation, utilities, commands loaded dynamically by category.",
         borning:
-          "Web platform for Alstom's internal multi-sport challenge, built during an internship in Charleroi.",
+          "Web platform for Alstom’s internal multi-sport challenge, built during an internship in Charleroi.",
       },
     },
     experience: {
@@ -272,7 +272,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
       descriptions: {
         mairie:
           "Town hall IT internship: hardware maintenance, network administration, first-line technical support.",
-        nyxo: "An open-source TypeScript package for building Discord bots, built to cover the API in depth rather than paper over it. Discontinued now, but it's what I actually learned backend development on, over more than two years.",
+        nyxo: "An open-source TypeScript package for building Discord bots, built to cover the API in depth rather than paper over it. Discontinued now, but it’s what I actually learned backend development on, over more than two years.",
         freelance: "Full-stack websites for clients, as an independent freelancer.",
         alstom:
           "At Alstom: rebuilt the ODM Monitoring Alstom network monitoring tool (see Projects), then moved into technical-assistant duties: workstation replacements and hardware support.",
@@ -300,13 +300,13 @@ export const dictionaries: Record<Lang, Dictionary> = {
       meta: {
         title: "Post-quantum cryptography · Tech watch · Tom B.",
         description:
-          "A tech watch on post-quantum cryptography: NIST's FIPS 203/204/205 standards, the migration timeline, and real-world adoption in 2026.",
+          "A tech watch on post-quantum cryptography: NIST’s FIPS 203/204/205 standards, the migration timeline, and real-world adoption in 2026.",
       },
       eyebrow: "Tech watch",
       title: "Post-quantum cryptography",
       intro: [
         "In August 2024, NIST turned a decade of theoretical research into concrete federal standards: FIPS 203, 204, and 205. What used to be an academic conference topic became, overnight, a compliance obligation for anyone protecting long-lived data.",
-        "The stakes fit in one phrase: \"harvest now, decrypt later.\" Traffic encrypted today with classical algorithms (RSA, ECC) can be intercepted and stored as-is, waiting for a sufficiently powerful quantum computer to decrypt it retroactively. Migrating before that day isn't optional: it's a race against a threat with no confirmed deadline.",
+        "The stakes fit in one phrase: “harvest now, decrypt later.” Traffic encrypted today with classical algorithms (RSA, ECC) can be intercepted and stored as-is, waiting for a sufficiently powerful quantum computer to decrypt it retroactively. Migrating before that day isn’t optional: it’s a race against a threat with no confirmed deadline.",
       ],
       algorithms: {
         heading: "The algorithms",
@@ -317,7 +317,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
         },
         descriptions: {
           mlkem:
-            "Establishes a shared secret between two parties, the post-quantum equivalent of Diffie-Hellman key exchange. Lattice-based, and the fastest of the three, which is why it's already the one deployed in TLS and encrypted messaging.",
+            "Establishes a shared secret between two parties, the post-quantum equivalent of Diffie-Hellman key exchange. Lattice-based, and the fastest of the three, which is why it’s already the one deployed in TLS and encrypted messaging.",
           mldsa:
             "A digital signature scheme derived from CRYSTALS-Dilithium, also lattice-based. Larger signatures than RSA (up to 4.6 KB), but the default candidate for document and certificate authentication.",
           slhdsa:
@@ -341,7 +341,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
           y2024:
             "FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), and FIPS 205 (SLH-DSA) are published as final standards.",
           y2025:
-            "HQC is selected as a fifth algorithm: a second key-exchange mechanism based on error-correcting codes rather than lattices, so the standard doesn't rest on one mathematical family alone.",
+            "HQC is selected as a fifth algorithm: a second key-exchange mechanism based on error-correcting codes rather than lattices, so the standard doesn’t rest on one mathematical family alone.",
           y2027:
             "NSA deadline (CNSA 2.0): every new U.S. government system must support post-quantum cryptography.",
           y2030: "Transition deadline for existing systems.",

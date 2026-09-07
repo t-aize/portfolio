@@ -104,10 +104,7 @@ export function Veille({ lang }: { lang: Lang }) {
 
         <div className="mt-6 flex flex-col gap-4">
           {t.veille.intro.map((paragraph) => (
-            <p
-              key={paragraph.slice(0, 24)}
-              className="text-base leading-relaxed text-taupe sm:text-lg"
-            >
+            <p key={paragraph} className="text-base leading-relaxed text-taupe sm:text-lg">
               {paragraph}
             </p>
           ))}
