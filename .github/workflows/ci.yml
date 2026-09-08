@@ -52,6 +52,9 @@ jobs:
           path: .next/
           retention-days: 7
           if-no-files-found: error
+          # .next/ is a dot-directory — upload-artifact's glob excludes
+          # hidden paths by default, which silently matches nothing here.
+          include-hidden-files: true
 
   dependency-review:
     name: Dependency review
