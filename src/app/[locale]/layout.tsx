@@ -3,7 +3,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Footer } from "~/components/layout/Footer";
 import { SmoothScroll } from "~/components/layout/SmoothScroll";
 import { siteConfig } from "~/config/site";
@@ -59,8 +59,6 @@ export async function generateMetadata({ params }: { params: Props["params"] }):
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
-
-  setRequestLocale(locale);
 
   const t = await getTranslations({ locale });
 

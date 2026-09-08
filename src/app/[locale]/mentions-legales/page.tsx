@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { siteConfig } from "~/config/site";
 import { Link } from "~/i18n/navigation";
 import type { Locale } from "~/i18n/routing";
@@ -34,7 +34,6 @@ export default async function MentionsLegalesPage({ params }: Props) {
   const { locale } = await params;
   if (locale !== "fr") notFound();
 
-  setRequestLocale(locale);
   const t = await getTranslations("mentionsLegales");
 
   return (

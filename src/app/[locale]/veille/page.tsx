@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Veille } from "~/components/Veille";
 import type { Locale } from "~/i18n/routing";
 import { buildAlternates } from "~/lib/page-metadata";
@@ -21,9 +21,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function VeillePage({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-
+export default function VeillePage() {
   return <Veille />;
 }
