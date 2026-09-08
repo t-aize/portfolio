@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "title": "Tom B. · Portfolio",
+    "description": "Self-taught backend developer (TypeScript, Node.js) focused on real-time systems, currently in a BTS SIO (SLAM) program. Projects, experience, and tech watch."
+  },
+  "hero": {
+    "subtitle": "Backend developer"
+  },
+  "rail": {
+    "up": "Back to top",
+    "down": "Continue"
+  },
+  "about": {
+    "eyebrow": "About",
+    "paragraph": "I’ve been coding for over seven years now: Scratch in primary school to start, then more seriously self-taught, mostly in TypeScript and Node.js, with a soft spot for real-time systems. Now in my second year of BTS SIO (SLAM). Most of the projects below grew out of that interest rather than an actual need."
+  },
+  "projects": {
+    "eyebrow": "Projects",
+    "github": "GitHub",
+    "private": "Private",
+    "descriptions": {
+      "odm": "Real-time network monitoring for an industrial site: interactive map, ICMP ping diagnostics, live SSE feed.",
+      "aurum": "Terminal trading panel for gold (XAUUSD), orders executed live via the cTrader MCP, market structure computed locally.",
+      "zen": "Multi-purpose Discord bot: moderation, utilities, commands loaded dynamically by category.",
+      "borning": "Web platform for Alstom’s internal multi-sport challenge, built during an internship in Charleroi."
+    }
+  },
+  "experience": {
+    "eyebrow": "Experience",
+    "titles": {
+      "mairie": "IT Support",
+      "nyxo": "Nyxo.js",
+      "freelance": "Freelance Development",
+      "alstom": "Developer Internship"
+    },
+    "periods": {
+      "mairie": "2023",
+      "nyxo": "2023 – 2025",
+      "freelance": "Ongoing",
+      "alstom": "June – July 2026"
+    },
+    "descriptions": {
+      "mairie": "Town hall IT internship: hardware maintenance, network administration, first-line technical support.",
+      "nyxo": "An open-source TypeScript package for building Discord bots, built to cover the API in depth rather than paper over it. Discontinued now, but it’s what I actually learned backend development on, over more than two years.",
+      "freelance": "Full-stack websites for clients, as an independent freelancer.",
+      "alstom": "At Alstom: rebuilt the ODM Monitoring Alstom network monitoring tool (see Projects), then moved into technical-assistant duties: workstation replacements and hardware support."
+    }
+  },
+  "contact": {
+    "emailAria": "Send an email to Tom B."
+  },
+  "footer": {
+    "navAria": "Links",
+    "backToTop": "Back to top",
+    "veille": "Tech watch",
+    "moreLabel": "Links"
+  },
+  "notFound": {
+    "title": "404 · Tom B. · Portfolio",
+    "caption": "Page not found",
+    "back": "Back home"
+  },
+  "langSwitch": {
+    "aria": "Switch language"
+  },
+  "skipToContent": "Skip to content",
+  "veille": {
+    "meta": {
+      "title": "Post-quantum cryptography · Tech watch · Tom B.",
+      "description": "A tech watch on post-quantum cryptography: NIST’s FIPS 203/204/205 standards, the migration timeline, and real-world adoption in 2026."
+    },
+    "eyebrow": "Tech watch",
+    "title": "Post-quantum cryptography",
+    "intro": [
+      "In August 2024, NIST turned a decade of theoretical research into concrete federal standards: FIPS 203, 204, and 205. What used to be an academic conference topic became, overnight, a compliance obligation for anyone protecting long-lived data.",
+      "The stakes fit in one phrase: “harvest now, decrypt later.” Traffic encrypted today with classical algorithms (RSA, ECC) can be intercepted and stored as-is, waiting for a sufficiently powerful quantum computer to decrypt it retroactively. Migrating before that day isn’t optional: it’s a race against a threat with no confirmed deadline."
+    ],
+    "algorithms": {
+      "heading": "The algorithms",
+      "tags": {
+        "mlkem": "Encapsulation",
+        "mldsa": "Signature",
+        "slhdsa": "Hash-based"
+      },
+      "descriptions": {
+        "mlkem": "Establishes a shared secret between two parties, the post-quantum equivalent of Diffie-Hellman key exchange. Lattice-based, and the fastest of the three, which is why it’s already the one deployed in TLS and encrypted messaging.",
+        "mldsa": "A digital signature scheme derived from CRYSTALS-Dilithium, also lattice-based. Larger signatures than RSA (up to 4.6 KB), but the default candidate for document and certificate authentication.",
+        "slhdsa": "A hash-based signature scheme rather than a lattice-based one: a deliberately different mathematical assumption, kept as a safety net in case lattices ever turn out to be breakable. Slower and heavier (up to 50 KB), reserved for cases where caution outweighs performance."
+      }
+    },
+    "timeline": {
+      "heading": "Timeline",
+      "years": {
+        "y2016": "2016",
+        "y2022": "2022",
+        "y2024": "Aug 2024",
+        "y2025": "Mar 2025",
+        "y2027": "2027",
+        "y2030": "2030",
+        "y2035": "2035"
+      },
+      "descriptions": {
+        "y2016": "NIST launches its international post-quantum standardization competition.",
+        "y2022": "Kyber, Dilithium, SPHINCS+, and Falcon are selected as finalists.",
+        "y2024": "FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), and FIPS 205 (SLH-DSA) are published as final standards.",
+        "y2025": "HQC is selected as a fifth algorithm: a second key-exchange mechanism based on error-correcting codes rather than lattices, so the standard doesn’t rest on one mathematical family alone.",
+        "y2027": "NSA deadline (CNSA 2.0): every new U.S. government system must support post-quantum cryptography.",
+        "y2030": "Transition deadline for existing systems.",
+        "y2035": "Target for full quantum resistance across all U.S. National Security Systems."
+      }
+    },
+    "adoption": {
+      "heading": "Real-world adoption",
+      "paragraph": "Chrome, Edge, and Firefox now enable a hybrid key exchange by default (X25519MLKEM768, combining the old and new standards); Signal and iMessage have already switched their protocols over. At Cloudflare, the share of TLS traffic encrypted with post-quantum key exchange went from roughly 2% in early 2024 to over 67% by April 2026, one of the fastest cryptographic migrations ever measured. The gap sits on the enterprise side: most are testing, few have shipped it to production.",
+      "stats": [
+        { "label": "Cloudflare post-quantum TLS share, 2024 → 2026", "value": "2% → 67%" },
+        { "label": "Enterprises testing vs. fully deployed", "value": "87% / 7%" }
+      ]
+    },
+    "sources": {
+      "heading": "Sources",
+      "descriptions": {
+        "nist": "The authoritative record of the standardization process, algorithm by algorithm.",
+        "nsa": "The mandated rollout timeline for U.S. national security systems.",
+        "cloudflare": "Real adoption numbers measured on production TLS traffic, not announcements.",
+        "csa": "A plain-language explainer of what the finalized standards actually change."
+      }
+    },
+    "backHome": "Back home"
+  }
+}

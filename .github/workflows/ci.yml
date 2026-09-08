@@ -28,28 +28,33 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install pnpm, Node.js & dependencies
-        uses: pnpm/setup@v2.1.0
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          runtime: node@22
-          cache: true
+          bun-version: "1.4.2"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
       - name: Biome (format, lint, assist)
-        run: pnpm run ci
+        run: bun run ci
 
       - name: Type-check
-        run: pnpm run typecheck
+        run: bun run typecheck
 
       - name: Build
-        run: pnpm run build
+        run: bun run build
 
       - name: Upload build output
         uses: actions/upload-artifact@v7.0.1
         with:
           name: build-output
-          path: dist/
+          path: .next/
           retention-days: 7
           if-no-files-found: error
+          # .next/ is a dot-directory — upload-artifact's glob excludes
+          # hidden paths by default, which silently matches nothing here.
+          include-hidden-files: true
 
   dependency-review:
     name: Dependency review

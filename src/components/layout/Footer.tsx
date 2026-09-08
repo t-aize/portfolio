@@ -1,6 +1,11 @@
+"use client";
+
 import { ArrowUp, ChevronUp } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { dictionaries, type Lang } from "~/i18n/dictionaries";
+import { siteConfig } from "~/config/site";
+import { Link, usePathname } from "~/i18n/navigation";
+import type { Locale } from "~/i18n/routing";
 import { getLenis, SCROLL_DURATION } from "~/lib/lenis";
 
 /**
@@ -21,14 +26,30 @@ import { getLenis, SCROLL_DURATION } from "~/lib/lenis";
  * too much (fixed-position sheet vs. inline row) for one shared DOM
  * structure to do both cleanly.
  */
-interface Props {
-  lang: Lang;
-  frHref: string;
-  enHref: string;
-}
+const footerLinks = (t: ReturnType<typeof useTranslations<"footer">>, lang: Locale) => [
+  {
+    label: siteConfig.github.handle,
+    href: siteConfig.github.url,
+    external: true,
+    mark: "github" as const,
+  },
+  {
+    label: siteConfig.linkedin.handle,
+    href: siteConfig.linkedin.url,
+    external: true,
+    mark: "linkedin" as const,
+  },
+  { label: t("veille"), href: `/veille`, external: false, mark: null },
+  ...(lang === "fr"
+    ? [{ label: t("mentionsLegales"), href: "/mentions-legales", external: false, mark: null }]
+    : []),
+];
 
-export function Footer({ lang, frHref, enHref }: Props) {
-  const t = dictionaries[lang];
+export function Footer() {
+  const lang = useLocale();
+  const t = useTranslations("footer");
+  const tLangSwitch = useTranslations("langSwitch");
+  const pathname = usePathname();
   const year = new Date().getFullYear();
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -41,11 +62,6 @@ export function Footer({ lang, frHref, enHref }: Props) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [sheetOpen]);
 
-  const setLangCookie = (value: Lang) => {
-    // biome-ignore lint/suspicious/noDocumentCookie: Cookie Store API isn't supported everywhere yet (Firefox, Safari).
-    document.cookie = `lang=${value}; path=/; max-age=31536000`;
-  };
-
   const scrollToTop = () => {
     const lenis = getLenis();
     if (lenis) lenis.scrollTo(0, { duration: SCROLL_DURATION });
@@ -57,6 +73,12 @@ export function Footer({ lang, frHref, enHref }: Props) {
       ? "rounded-full bg-ink px-3 py-1.5 text-cream transition-colors"
       : "rounded-full px-3 py-1.5 text-taupe transition-colors hover:text-clay";
 
+  // mentions-legales is French-only (LCEN is French law) — switching to
+  // English from there lands on the English homepage instead of a
+  // /mentions-legales route that doesn't exist in that locale.
+  const otherLocaleHref = pathname === "/mentions-legales" ? "/" : pathname;
+  const links = footerLinks(t, lang as Locale);
+
   return (
     <footer className="border-t border-stone/60 px-8 py-8 sm:px-16 sm:py-10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
@@ -65,7 +87,7 @@ export function Footer({ lang, frHref, enHref }: Props) {
             <span aria-hidden="true" className="font-serif text-sm normal-case">
               完
             </span>
-            © {year} Tom B.
+            © {year} {siteConfig.name}
           </p>
 
           {/* Pill toggle rather than the old flush "FR · EN" text: gives
@@ -73,71 +95,43 @@ export function Footer({ lang, frHref, enHref }: Props) {
               state (filled, not just a color swap). Lives next to the
               copyright on every breakpoint, not as its own row. */}
           <nav
-            aria-label={t.langSwitch.aria}
+            aria-label={tLangSwitch("aria")}
             className="flex items-center gap-2 text-xs tracking-[0.3em] uppercase sm:order-3"
           >
-            <a
-              href={frHref}
+            <Link
+              href={otherLocaleHref}
+              locale="fr"
               aria-current={lang === "fr" ? "page" : undefined}
-              onClick={() => setLangCookie("fr")}
               className={langPillClass(lang === "fr")}
             >
               FR
-            </a>
-            <a
-              href={enHref}
+            </Link>
+            <Link
+              href={otherLocaleHref}
+              locale="en"
               aria-current={lang === "en" ? "page" : undefined}
-              onClick={() => setLangCookie("en")}
               className={langPillClass(lang === "en")}
             >
               EN
-            </a>
+            </Link>
           </nav>
         </div>
 
         {/* Desktop: unchanged flat row. */}
         <nav
-          aria-label={t.footer.navAria}
+          aria-label={t("navAria")}
           className="hidden text-xs tracking-[0.3em] text-taupe uppercase sm:flex sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2"
         >
-          <a
-            href="https://github.com/t-aize"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-clay"
-          >
-            <GithubMark className="h-3 w-3" />
-            @t-aize
-          </a>
-          <span aria-hidden="true" className="h-3 w-px bg-stone/60" />
-          <a
-            href="https://linkedin.com/in/tom-bialecki-464a65270"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-clay"
-          >
-            <LinkedinMark className="h-3 w-3" />
-            tom-bialecki
-          </a>
-          <span aria-hidden="true" className="h-3 w-px bg-stone/60" />
-          <a href={`/${lang}/veille`} className="transition-colors hover:text-clay">
-            {t.footer.veille}
-          </a>
-          {lang === "fr" && (
-            <>
-              <span aria-hidden="true" className="h-3 w-px bg-stone/60" />
-              <a href="/fr/mentions-legales" className="transition-colors hover:text-clay">
-                Mentions légales
-              </a>
-            </>
-          )}
+          {links.map((link, index) => (
+            <FooterLink key={link.href} link={link} withSeparator={index > 0} />
+          ))}
           <span aria-hidden="true" className="h-3 w-px bg-stone/60" />
           <button
             type="button"
             onClick={scrollToTop}
             className="inline-flex items-center gap-1 transition-colors hover:text-clay"
           >
-            {t.footer.backToTop}
+            {t("backToTop")}
             <ArrowUp aria-hidden="true" size={12} strokeWidth={1.5} />
           </button>
         </nav>
@@ -150,7 +144,7 @@ export function Footer({ lang, frHref, enHref }: Props) {
           onClick={() => setSheetOpen((open) => !open)}
           className="flex items-center justify-center gap-2 border-t border-stone/60 pt-4 text-xs tracking-[0.3em] text-taupe uppercase transition-colors hover:text-clay sm:hidden"
         >
-          {t.footer.moreLabel}
+          {t("moreLabel")}
           <ChevronUp
             aria-hidden="true"
             size={14}
@@ -176,38 +170,15 @@ export function Footer({ lang, frHref, enHref }: Props) {
         />
         <nav
           id="footer-sheet"
-          aria-label={t.footer.navAria}
+          aria-label={t("navAria")}
           className={`fixed inset-x-0 bottom-0 z-40 overscroll-contain rounded-t-2xl border-t border-stone/60 bg-cream px-8 py-8 text-xs tracking-[0.3em] text-taupe uppercase shadow-[0_-8px_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out motion-reduce:transition-none ${
             sheetOpen ? "translate-y-0" : "translate-y-full"
           }`}
         >
           <div className="flex flex-col gap-5">
-            <a
-              href="https://github.com/t-aize"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 transition-colors hover:text-clay"
-            >
-              <GithubMark className="h-3.5 w-3.5" />
-              @t-aize
-            </a>
-            <a
-              href="https://linkedin.com/in/tom-bialecki-464a65270"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 transition-colors hover:text-clay"
-            >
-              <LinkedinMark className="h-3.5 w-3.5" />
-              tom-bialecki
-            </a>
-            <a href={`/${lang}/veille`} className="transition-colors hover:text-clay">
-              {t.footer.veille}
-            </a>
-            {lang === "fr" && (
-              <a href="/fr/mentions-legales" className="transition-colors hover:text-clay">
-                Mentions légales
-              </a>
-            )}
+            {links.map((link) => (
+              <FooterLink key={link.href} link={link} withSeparator={false} />
+            ))}
             <button
               type="button"
               onClick={() => {
@@ -216,7 +187,7 @@ export function Footer({ lang, frHref, enHref }: Props) {
               }}
               className="inline-flex items-center gap-1 border-t border-stone/60 pt-5 transition-colors hover:text-clay"
             >
-              {t.footer.backToTop}
+              {t("backToTop")}
               <ArrowUp aria-hidden="true" size={12} strokeWidth={1.5} />
             </button>
           </div>
@@ -229,10 +200,47 @@ export function Footer({ lang, frHref, enHref }: Props) {
           watermark kanji, just spelled out and placed here instead. */}
       <div aria-hidden="true" className="mt-12 -mb-6 overflow-hidden select-none sm:-mb-10">
         <p className="translate-y-[20%] text-center font-serif text-[4rem] leading-none text-ink/[0.06] sm:text-[8rem] md:text-[10rem]">
-          Tom B.
+          {siteConfig.name}
         </p>
       </div>
     </footer>
+  );
+}
+
+interface FooterLinkData {
+  label: string;
+  href: string;
+  external: boolean;
+  mark: "github" | "linkedin" | null;
+}
+
+function FooterLink({ link, withSeparator }: { link: FooterLinkData; withSeparator: boolean }) {
+  const inner = (
+    <>
+      {link.mark === "github" && <GithubMark className="h-3 w-3" />}
+      {link.mark === "linkedin" && <LinkedinMark className="h-3 w-3" />}
+      {link.label}
+    </>
+  );
+
+  const linkClassName =
+    link.mark !== null
+      ? "inline-flex items-center gap-1.5 transition-colors hover:text-clay"
+      : "transition-colors hover:text-clay";
+
+  return (
+    <>
+      {withSeparator && <span aria-hidden="true" className="h-3 w-px bg-stone/60" />}
+      {link.external ? (
+        <a href={link.href} target="_blank" rel="noreferrer" className={linkClassName}>
+          {inner}
+        </a>
+      ) : (
+        <Link href={link.href} className={linkClassName}>
+          {inner}
+        </Link>
+      )}
+    </>
   );
 }
 

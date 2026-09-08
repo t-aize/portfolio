@@ -1,5 +1,7 @@
+export type AlgorithmId = "mlkem" | "mldsa" | "slhdsa";
+
 export interface AlgorithmData {
-  id: string;
+  id: AlgorithmId;
   name: string;
   fipsRef: string;
 }
@@ -10,8 +12,10 @@ export const algorithms: AlgorithmData[] = [
   { id: "slhdsa", name: "SLH-DSA", fipsRef: "FIPS 205" },
 ];
 
+export type TimelineId = "y2016" | "y2022" | "y2024" | "y2025" | "y2027" | "y2030" | "y2035";
+
 export interface TimelineEntryData {
-  id: string;
+  id: TimelineId;
 }
 
 // Standardization milestones and the government mandate deadlines that
@@ -27,8 +31,10 @@ export const timeline: TimelineEntryData[] = [
   { id: "y2035" },
 ];
 
+export type SourceId = "nist" | "nsa" | "cloudflare" | "csa";
+
 export interface SourceData {
-  id: string;
+  id: SourceId;
   label: string;
   href: string;
 }

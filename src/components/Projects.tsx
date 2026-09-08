@@ -1,8 +1,10 @@
+"use client";
+
 import { ArrowUpRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import { type ProjectData, projects } from "~/data/projects";
-import { dictionaries, type Lang } from "~/i18n/dictionaries";
-import { gsap, useGSAP } from "~/lib/gsap";
+import { useScrollReveal } from "~/hooks/use-scroll-reveal";
 
 /**
  * The project list as an index, not a card grid: a table of contents for
@@ -13,39 +15,27 @@ import { gsap, useGSAP } from "~/lib/gsap";
  * Rows fade/lift in on scroll, staggered, mirroring the hero's entrance
  * without repeating it (no char-split, just the same restraint).
  */
-export function Projects({ lang }: { lang: Lang }) {
-  const t = dictionaries[lang];
+export function Projects() {
+  const t = useTranslations("projects");
   const sectionRef = useRef<HTMLElement>(null);
   const rowRefs = useRef<(HTMLElement | null)[]>([]);
 
-  useGSAP(
-    () => {
-      const section = sectionRef.current;
+  useScrollReveal({
+    scope: sectionRef,
+    trigger: sectionRef,
+    getSteps: () => {
       const rows = rowRefs.current.filter((el): el is HTMLElement => el !== null);
-      if (!section || rows.length === 0) return;
+      if (rows.length === 0) return null;
 
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduceMotion) {
-        gsap.set(rows, { autoAlpha: 1, y: 0 });
-        return;
-      }
-
-      gsap.set(rows, { autoAlpha: 0, y: 24 });
-
-      gsap.to(rows, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 1.3,
-        stagger: 0.18,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: section,
-          start: "top 75%",
+      return [
+        {
+          targets: rows,
+          from: { autoAlpha: 0, y: 24 },
+          to: { autoAlpha: 1, y: 0, duration: 1.3, stagger: 0.18, ease: "power2.out" },
         },
-      });
+      ];
     },
-    { scope: sectionRef },
-  );
+  });
 
   return (
     <section
@@ -60,9 +50,7 @@ export function Projects({ lang }: { lang: Lang }) {
             作品
           </span>
           <span aria-hidden="true" className="h-px flex-1 bg-stone/60" />
-          <span className="text-xs tracking-[0.35em] text-taupe uppercase">
-            {t.projects.eyebrow}
-          </span>
+          <span className="text-xs tracking-[0.35em] text-taupe uppercase">{t("eyebrow")}</span>
         </div>
 
         <ol className="flex flex-col">
@@ -70,8 +58,8 @@ export function Projects({ lang }: { lang: Lang }) {
             <li key={project.id}>
               <ProjectRow
                 project={project}
-                description={t.projects.descriptions[project.id]}
-                labels={{ github: t.projects.github, private: t.projects.private }}
+                description={t(`descriptions.${project.id}`)}
+                labels={{ github: t("github"), private: t("private") }}
                 index={index}
                 ref={(el) => {
                   rowRefs.current[index] = el;

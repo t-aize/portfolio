@@ -1,6 +1,9 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
-import { dictionaries, type Lang } from "~/i18n/dictionaries";
-import { gsap, useGSAP } from "~/lib/gsap";
+import { siteConfig } from "~/config/site";
+import { useScrollReveal } from "~/hooks/use-scroll-reveal";
 
 /**
  * The closing signature, mirroring the Hero's opening one: same kakemono
@@ -11,43 +14,43 @@ import { gsap, useGSAP } from "~/lib/gsap";
  * reach them — the one slot on the page that's actually interactive
  * rather than descriptive, so the email lives where the subtitle did.
  */
-export function Contact({ lang }: { lang: Lang }) {
-  const t = dictionaries[lang];
+export function Contact() {
+  const t = useTranslations("contact");
   const containerRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
   const emailRef = useRef<HTMLAnchorElement>(null);
 
-  useGSAP(
-    () => {
+  useScrollReveal({
+    scope: containerRef,
+    trigger: containerRef,
+    getSteps: () => {
       const title = titleRef.current;
       const rule = ruleRef.current;
       const email = emailRef.current;
-      if (!title || !rule || !email) return;
+      if (!title || !rule || !email) return null;
 
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduceMotion) {
-        gsap.set([title, rule, email], { autoAlpha: 1, y: 0, scaleX: 1 });
-        return;
-      }
-
-      gsap.set(title, { autoAlpha: 0, y: 20 });
-      gsap.set(rule, { scaleX: 0, transformOrigin: "right center" });
-      gsap.set(email, { autoAlpha: 0, y: 10 });
-
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 75%",
-          },
-        })
-        .to(title, { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" })
-        .to(rule, { scaleX: 1, duration: 0.7, ease: "power3.out" }, "-=0.5")
-        .to(email, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.4");
+      return [
+        {
+          targets: title,
+          from: { autoAlpha: 0, y: 20 },
+          to: { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" },
+        },
+        {
+          targets: rule,
+          from: { scaleX: 0, transformOrigin: "right center" },
+          to: { scaleX: 1, duration: 0.7, ease: "power3.out" },
+          position: "-=0.5",
+        },
+        {
+          targets: email,
+          from: { autoAlpha: 0, y: 10 },
+          to: { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" },
+          position: "-=0.4",
+        },
+      ];
     },
-    { scope: containerRef },
-  );
+  });
 
   return (
     <section
@@ -72,11 +75,11 @@ export function Contact({ lang }: { lang: Lang }) {
 
         <a
           ref={emailRef}
-          href="mailto:tom.bialecki2211@gmail.com"
-          aria-label={t.contact.emailAria}
+          href={`mailto:${siteConfig.email}`}
+          aria-label={t("emailAria")}
           className="mt-4 inline-block text-xs tracking-[0.3em] text-taupe uppercase transition-colors hover:text-clay sm:text-sm"
         >
-          tom.bialecki2211@gmail.com
+          {siteConfig.email}
         </a>
       </div>
     </section>

@@ -1,5 +1,7 @@
+export type ProjectId = "odm" | "aurum" | "zen" | "borning";
+
 export interface ProjectData {
-  id: string;
+  id: ProjectId;
   title: string;
   stack: string[];
   href: string | null;
