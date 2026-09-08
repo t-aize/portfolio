@@ -7,7 +7,6 @@
 # ------------------------------------------------------------------
 # Source code
 # ------------------------------------------------------------------
-*.astro   text eol=lf
 *.ts      text eol=lf
 *.tsx     text eol=lf
 *.js      text eol=lf
@@ -58,13 +57,12 @@
 # ------------------------------------------------------------------
 # Lockfiles: keep out of language-stats/diff noise, never manually merge
 # ------------------------------------------------------------------
-pnpm-lock.yaml -diff -merge linguist-generated=true linguist-language=YAML
+bun.lock -diff -merge linguist-generated=true linguist-language=YAML
 
 # ------------------------------------------------------------------
 # GitHub Linguist: exclude generated/build output from repo language stats
 # ------------------------------------------------------------------
-dist/**       linguist-generated=true -diff
-.astro/**     linguist-generated=true -diff
+.next/**      linguist-generated=true -diff
 
 # ------------------------------------------------------------------
 # Files excluded from `git archive` exports (release tarballs, etc.)

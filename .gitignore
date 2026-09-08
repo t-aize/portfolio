@@ -1,9 +1,12 @@
 # build output
 dist/
 build/
+.next/
+out/
 
 # generated types
-.astro/
+next-env.d.ts
+*.tsbuildinfo
 
 # dependencies
 node_modules/
@@ -34,7 +37,6 @@ pnpm-debug.log*
 .cache/
 .turbo/
 .biome-cache/
-*.tsbuildinfo
 
 # deployment platform artifacts
 .vercel/

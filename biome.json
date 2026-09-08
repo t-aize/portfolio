@@ -10,10 +10,10 @@
     "ignoreUnknown": true,
     "includes": [
       "**",
+      "!**/.next",
       "!**/dist",
       "!**/node_modules",
       "!**/public",
-      "!**/pnpm-lock.yaml",
       "!**/.vercel",
       "!**/.netlify",
       "!**/.wrangler"
@@ -49,18 +49,13 @@
       "enabled": true
     }
   },
-  "html": {
-    "formatter": {
-      "enabled": false
-    },
-    "experimentalFullSupportEnabled": true
-  },
   "linter": {
     "enabled": true,
     "rules": {
       "preset": "recommended"
     },
     "domains": {
+      "next": "recommended",
       "react": "recommended",
       "tailwind": "recommended"
     }
@@ -72,19 +67,5 @@
         "organizeImports": "on"
       }
     }
-  },
-  "overrides": [
-    {
-      "includes": ["**/*.astro"],
-      "linter": {
-        "enabled": true,
-        "rules": {
-          "preset": "recommended"
-        }
-      },
-      "formatter": {
-        "enabled": true
-      }
-    }
-  ]
+  }
 }

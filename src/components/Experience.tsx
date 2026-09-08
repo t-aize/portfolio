@@ -1,7 +1,9 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import { type ExperienceData, experience } from "~/data/experience";
-import { dictionaries, type Lang } from "~/i18n/dictionaries";
-import { gsap, useGSAP } from "~/lib/gsap";
+import { useScrollReveal } from "~/hooks/use-scroll-reveal";
 
 /**
  * A row list like Projects (number, title, one line, stack), but with a
@@ -10,39 +12,27 @@ import { gsap, useGSAP } from "~/lib/gsap";
  * left instead of About's right, so the two sections don't read as the
  * same device repeated on the same side.
  */
-export function Experience({ lang }: { lang: Lang }) {
-  const t = dictionaries[lang];
+export function Experience() {
+  const t = useTranslations("experience");
   const sectionRef = useRef<HTMLElement>(null);
   const rowRefs = useRef<(HTMLElement | null)[]>([]);
 
-  useGSAP(
-    () => {
-      const section = sectionRef.current;
+  useScrollReveal({
+    scope: sectionRef,
+    trigger: sectionRef,
+    getSteps: () => {
       const rows = rowRefs.current.filter((el): el is HTMLElement => el !== null);
-      if (!section || rows.length === 0) return;
+      if (rows.length === 0) return null;
 
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduceMotion) {
-        gsap.set(rows, { autoAlpha: 1, y: 0 });
-        return;
-      }
-
-      gsap.set(rows, { autoAlpha: 0, y: 24 });
-
-      gsap.to(rows, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 1.3,
-        stagger: 0.18,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: section,
-          start: "top 75%",
+      return [
+        {
+          targets: rows,
+          from: { autoAlpha: 0, y: 24 },
+          to: { autoAlpha: 1, y: 0, duration: 1.3, stagger: 0.18, ease: "power2.out" },
         },
-      });
+      ];
     },
-    { scope: sectionRef },
-  );
+  });
 
   return (
     <section
@@ -61,9 +51,7 @@ export function Experience({ lang }: { lang: Lang }) {
       <div className="relative mx-auto max-w-3xl">
         <div className="mb-16 flex items-center gap-4 sm:mb-20">
           <span aria-hidden="true" className="h-px flex-1 bg-stone/60" />
-          <span className="text-xs tracking-[0.35em] text-taupe uppercase">
-            {t.experience.eyebrow}
-          </span>
+          <span className="text-xs tracking-[0.35em] text-taupe uppercase">{t("eyebrow")}</span>
         </div>
 
         <ol className="flex flex-col">
@@ -71,9 +59,9 @@ export function Experience({ lang }: { lang: Lang }) {
             <li key={entry.id}>
               <ExperienceRow
                 entry={entry}
-                title={t.experience.titles[entry.id]}
-                period={t.experience.periods[entry.id]}
-                description={t.experience.descriptions[entry.id]}
+                title={t(`titles.${entry.id}`)}
+                period={t(`periods.${entry.id}`)}
+                description={t(`descriptions.${entry.id}`)}
                 index={index}
                 ref={(el) => {
                   rowRefs.current[index] = el;

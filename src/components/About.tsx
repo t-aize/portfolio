@@ -1,6 +1,8 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
-import { dictionaries, type Lang } from "~/i18n/dictionaries";
-import { gsap, useGSAP } from "~/lib/gsap";
+import { useScrollReveal } from "~/hooks/use-scroll-reveal";
 
 /**
  * A short, plain-spoken bio, the section between the signature and the
@@ -10,53 +12,39 @@ import { gsap, useGSAP } from "~/lib/gsap";
  * faintly into the corner of a page rather than announced. A soft ink
  * wash blooms in first, then the text settles on top of it.
  */
-export function About({ lang }: { lang: Lang }) {
-  const t = dictionaries[lang];
+export function About() {
+  const t = useTranslations("about");
   const sectionRef = useRef<HTMLElement>(null);
   const bloomRef = useRef<HTMLDivElement>(null);
-  const paraRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const paraRef = useRef<HTMLParagraphElement>(null);
 
-  useGSAP(
-    () => {
-      const section = sectionRef.current;
+  useScrollReveal({
+    scope: sectionRef,
+    trigger: sectionRef,
+    getSteps: () => {
       const bloom = bloomRef.current;
-      const paras = paraRefs.current.filter((el): el is HTMLParagraphElement => el !== null);
-      if (!section || paras.length === 0) return;
+      const para = paraRef.current;
+      if (!para) return null;
 
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduceMotion) {
-        if (bloom) gsap.set(bloom, { autoAlpha: 1 });
-        gsap.set(paras, { autoAlpha: 1, y: 0 });
-        return;
-      }
-
-      if (bloom) gsap.set(bloom, { autoAlpha: 0, scale: 0.7 });
-      gsap.set(paras, { autoAlpha: 0, y: 20 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 75%",
-        },
-      });
-
-      if (bloom) {
-        tl.to(bloom, { autoAlpha: 1, scale: 1, duration: 1.6, ease: "power2.out" });
-      }
-      tl.to(
-        paras,
+      return [
+        ...(bloom
+          ? [
+              {
+                targets: bloom,
+                from: { autoAlpha: 0, scale: 0.7 },
+                to: { autoAlpha: 1, scale: 1, duration: 1.6, ease: "power2.out" },
+              },
+            ]
+          : []),
         {
-          autoAlpha: 1,
-          y: 0,
-          duration: 1.1,
-          stagger: 0.18,
-          ease: "power2.out",
+          targets: para,
+          from: { autoAlpha: 0, y: 20 },
+          to: { autoAlpha: 1, y: 0, duration: 1.1, ease: "power2.out" },
+          position: bloom ? "-=1.1" : 0,
         },
-        bloom ? "-=1.1" : 0,
-      );
+      ];
     },
-    { scope: sectionRef },
-  );
+  });
 
   return (
     <section
@@ -81,16 +69,11 @@ export function About({ lang }: { lang: Lang }) {
       <div className="relative mx-auto max-w-2xl">
         <div className="flex items-center gap-4">
           <span aria-hidden="true" className="h-px flex-1 bg-stone/60" />
-          <span className="text-xs tracking-[0.35em] text-taupe uppercase">{t.about.eyebrow}</span>
+          <span className="text-xs tracking-[0.35em] text-taupe uppercase">{t("eyebrow")}</span>
         </div>
 
-        <p
-          ref={(el) => {
-            paraRefs.current[0] = el;
-          }}
-          className="mt-6 text-base leading-relaxed text-taupe sm:mt-8 sm:text-lg"
-        >
-          {t.about.paragraph}
+        <p ref={paraRef} className="mt-6 text-base leading-relaxed text-taupe sm:mt-8 sm:text-lg">
+          {t("paragraph")}
         </p>
       </div>
     </section>

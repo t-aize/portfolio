@@ -1,0 +1,163 @@
+{
+  "meta": {
+    "title": "Tom B. · Portfolio",
+    "description": "Développeur backend autodidacte (TypeScript, Node.js), passionné de systèmes temps réel. Actuellement en BTS SIO SLAM. Projets, expérience et veille technique."
+  },
+  "hero": {
+    "subtitle": "Développeur backend"
+  },
+  "rail": {
+    "up": "Revenir en haut",
+    "down": "Découvrir la suite"
+  },
+  "about": {
+    "eyebrow": "À propos",
+    "paragraph": "Je code depuis plus de sept ans : Scratch en CM2 pour commencer, puis plus sérieusement en autodidacte, surtout en TypeScript et Node.js, avec un faible pour les systèmes temps réel. Aujourd’hui en 2ᵉ année de BTS SIO option SLAM. La plupart des projets ci-dessous sont nés de cet intérêt plutôt que d’un besoin précis."
+  },
+  "projects": {
+    "eyebrow": "Projets",
+    "github": "GitHub",
+    "private": "Privé",
+    "descriptions": {
+      "odm": "Monitoring réseau temps réel d’un site industriel : carte interactive, diagnostic ping ICMP, flux live SSE.",
+      "aurum": "Panel de trading terminal pour l’or (XAUUSD), ordres exécutés en direct via le MCP cTrader, structure de marché calculée en local.",
+      "zen": "Bot Discord multi-usage : modération, utilitaires, commandes chargées dynamiquement par catégorie.",
+      "borning": "Plateforme web pour le challenge multisport interne d’Alstom, développée en stage à Charleroi."
+    }
+  },
+  "experience": {
+    "eyebrow": "Expérience",
+    "titles": {
+      "mairie": "Support informatique",
+      "nyxo": "Nyxo.js",
+      "freelance": "Développement freelance",
+      "alstom": "Stage développeur"
+    },
+    "periods": {
+      "mairie": "2023",
+      "nyxo": "2023 – 2025",
+      "freelance": "En cours",
+      "alstom": "Juin – juillet 2026"
+    },
+    "descriptions": {
+      "mairie": "Stage en mairie : maintenance matérielle, administration réseau, support technique de premier niveau.",
+      "nyxo": "Package TypeScript open source pour construire des bots Discord, pensé pour couvrir l’API en profondeur plutôt que la contourner. Discontinué depuis, mais c’est là-dessus que je me suis vraiment formé, plus de deux ans durant.",
+      "freelance": "Sites web fullstack pour des clients, en indépendant.",
+      "alstom": "Chez Alstom : refonte du monitoring réseau ODM Monitoring Alstom (voir Projets), puis mission d’assistance technique : remplacement de postes et support matériel."
+    }
+  },
+  "contact": {
+    "emailAria": "Envoyer un e-mail à Tom B."
+  },
+  "footer": {
+    "navAria": "Liens",
+    "backToTop": "Haut de page",
+    "veille": "Veille techno",
+    "moreLabel": "Liens",
+    "mentionsLegales": "Mentions légales"
+  },
+  "notFound": {
+    "title": "404 · Tom B. · Portfolio",
+    "caption": "Page introuvable",
+    "back": "Retour à l’accueil"
+  },
+  "langSwitch": {
+    "aria": "Changer de langue"
+  },
+  "skipToContent": "Aller au contenu",
+  "veille": {
+    "meta": {
+      "title": "Cryptographie post-quantique · Veille · Tom B.",
+      "description": "Veille technologique sur la cryptographie post-quantique : normes NIST FIPS 203/204/205, calendrier de bascule et adoption réelle en 2026."
+    },
+    "eyebrow": "Veille technologique",
+    "title": "Cryptographie post-quantique",
+    "intro": [
+      "En août 2024, le NIST a transformé une décennie de recherche théorique en normes fédérales concrètes : FIPS 203, 204 et 205. Ce qui n’était qu’un sujet de conférence académique est devenu, du jour au lendemain, une obligation de mise en conformité pour quiconque protège des données à long terme.",
+      "L’enjeu tient en une phrase : « harvest now, decrypt later ». Un trafic chiffré aujourd’hui avec des algorithmes classiques (RSA, ECC) peut être intercepté et stocké tel quel, en attendant qu’un ordinateur quantique suffisamment puissant existe pour le déchiffrer rétroactivement. Migrer avant cette date n’est pas une option, c’est une course contre une menace qui n’a pas encore de date."
+    ],
+    "algorithms": {
+      "heading": "Les algorithmes retenus",
+      "tags": {
+        "mlkem": "Encapsulation",
+        "mldsa": "Signature",
+        "slhdsa": "Basé sur le hachage"
+      },
+      "descriptions": {
+        "mlkem": "Établit une clé secrète partagée entre deux parties, l’équivalent post-quantique de l’échange Diffie-Hellman. Fondé sur les réseaux euclidiens (lattices), c’est le plus rapide des trois, donc déjà déployé dans TLS et la messagerie chiffrée.",
+        "mldsa": "Signature numérique dérivée de CRYSTALS-Dilithium, elle aussi fondée sur les lattices. Signatures plus volumineuses que RSA (jusqu’à 4,6 Ko), mais candidat par défaut pour l’authentification de documents et de certificats.",
+        "slhdsa": "Signature à base de fonctions de hachage plutôt que de lattices : une hypothèse mathématique différente, choisie exprès comme filet de sécurité si les réseaux euclidiens s’avéraient un jour cassables. Plus lente et plus lourde (jusqu’à 50 Ko), réservée aux usages où la prudence prime sur la performance."
+      }
+    },
+    "timeline": {
+      "heading": "Chronologie",
+      "years": {
+        "y2016": "2016",
+        "y2022": "2022",
+        "y2024": "Août 2024",
+        "y2025": "Mars 2025",
+        "y2027": "2027",
+        "y2030": "2030",
+        "y2035": "2035"
+      },
+      "descriptions": {
+        "y2016": "Le NIST lance son concours international de standardisation post-quantique.",
+        "y2022": "Kyber, Dilithium, SPHINCS+ et Falcon sont sélectionnés comme finalistes.",
+        "y2024": "Publication des normes définitives FIPS 203 (ML-KEM), FIPS 204 (ML-DSA) et FIPS 205 (SLH-DSA).",
+        "y2025": "HQC est retenu comme cinquième algorithme : un second mécanisme d’échange de clé fondé sur les codes correcteurs plutôt que sur les lattices, pour ne pas tout miser sur une seule famille mathématique.",
+        "y2027": "Échéance fixée par la NSA (CNSA 2.0) : tout nouveau système gouvernemental américain doit prendre en charge la cryptographie post-quantique.",
+        "y2030": "Fin de la période de transition prévue pour les systèmes existants.",
+        "y2035": "Objectif de résistance quantique complète pour l’ensemble des systèmes de sécurité nationale américains."
+      }
+    },
+    "adoption": {
+      "heading": "Adoption réelle",
+      "paragraph": "Chrome, Edge et Firefox activent par défaut un échange de clé hybride (X25519MLKEM768, qui combine l’ancien et le nouveau standard) ; Signal et iMessage ont déjà basculé leurs protocoles. Chez Cloudflare, la part du trafic TLS chiffré en post-quantique est passée d’environ 2 % début 2024 à plus de 67 % en avril 2026, l’une des migrations cryptographiques les plus rapides jamais mesurées. Le décalage se situe côté entreprises : la plupart testent, peu ont basculé en production.",
+      "stats": [
+        {
+          "label": "Trafic TLS post-quantique chez Cloudflare, 2024 → 2026",
+          "value": "2 % → 67 %"
+        },
+        { "label": "Entreprises en test vs entièrement déployées", "value": "87 % / 7 %" }
+      ]
+    },
+    "sources": {
+      "heading": "Sources",
+      "descriptions": {
+        "nist": "Le dossier de référence du processus de standardisation, algorithme par algorithme.",
+        "nsa": "Le calendrier de bascule imposé aux systèmes de sécurité nationale américains.",
+        "cloudflare": "Des chiffres d’adoption réels, mesurés sur du trafic TLS en production plutôt qu’annoncés.",
+        "csa": "Une explication grand public de ce que change concrètement la finalisation des normes."
+      }
+    },
+    "backHome": "Retour à l’accueil"
+  },
+  "mentionsLegales": {
+    "meta": {
+      "title": "Mentions légales · Tom B. · Portfolio",
+      "description": "Mentions légales du portfolio de Tom B., conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique."
+    },
+    "eyebrow": "Informations légales",
+    "title": "Mentions légales",
+    "backHome": "Retour à l’accueil",
+    "editor": {
+      "heading": "Éditeur du site",
+      "paragraph": "Ce site est un portfolio personnel, à but non professionnel, édité par Tom B. Conformément à l’article 6-III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique, l’éditeur étant une personne physique n’agissant pas à titre professionnel, son identité complète (nom, domicile) n’est pas publiée ici : elle est conservée par l’hébergeur et communicable sur demande à l’autorité judiciaire.",
+      "contact": "Contact :"
+    },
+    "publicationDirector": {
+      "heading": "Directeur de la publication",
+      "paragraph": "Tom B."
+    },
+    "hosting": {
+      "heading": "Hébergement",
+      "name": "Vercel Inc.",
+      "address": "440 N Barranca Avenue #4133",
+      "cityCountry": "Covina, CA 91723, États-Unis"
+    },
+    "intellectualProperty": {
+      "heading": "Propriété intellectuelle",
+      "paragraph": "L’ensemble des contenus de ce site (textes, code, mise en forme) est la propriété de son éditeur, sauf mention contraire. Toute reproduction sans autorisation préalable est interdite."
+    }
+  }
+}

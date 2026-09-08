@@ -14,7 +14,7 @@ indent_style = space
 indent_size = 2
 max_line_length = 100
 
-[*.{astro,ts,tsx,js,jsx,mjs,cjs,json,jsonc,css,scss,yml,yaml,html,svg}]
+[*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc,css,scss,yml,yaml,html,svg}]
 indent_style = space
 indent_size = 2
 
@@ -28,7 +28,7 @@ max_line_length = off
 insert_final_newline = unset
 trim_trailing_whitespace = unset
 
-[pnpm-lock.yaml]
+[bun.lock]
 indent_style = unset
 indent_size = unset
 insert_final_newline = unset

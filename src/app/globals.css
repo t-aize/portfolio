@@ -1,20 +1,11 @@
-@import "@fontsource/zen-kaku-gothic-new/latin-300.css";
-@import "@fontsource/zen-kaku-gothic-new/latin-ext-300.css";
-@import "@fontsource/zen-kaku-gothic-new/latin-400.css";
-@import "@fontsource/zen-kaku-gothic-new/latin-ext-400.css";
-@import "@fontsource/zen-kaku-gothic-new/japanese-400.css";
-@import "@fontsource/shippori-mincho/latin-500.css";
-@import "@fontsource/shippori-mincho/latin-600.css";
-@import "@fontsource/shippori-mincho/japanese-500.css";
-@import "@fontsource/shippori-mincho/japanese-600.css";
 @import "tailwindcss";
 
-@theme {
+@theme inline {
   --font-sans:
-    "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui,
+    var(--font-zen-kaku), "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui,
     sans-serif;
   /* Display only: the one ornamental voice on the page, used sparingly. */
-  --font-serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-serif: var(--font-shippori), "Hiragino Mincho ProN", "Yu Mincho", serif;
 
   /* Palette coolors.co/463f3a-8a817c-bcb8b1-f4f3ee-e0afa0, --color-taupe
      darkened from the original #8a817c: at that value taupe-on-cream body

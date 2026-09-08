@@ -1,5 +1,7 @@
+export type ExperienceId = "mairie" | "nyxo" | "freelance" | "alstom";
+
 export interface ExperienceData {
-  id: string;
+  id: ExperienceId;
   stack: string[];
 }
 
