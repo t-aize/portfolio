@@ -45,7 +45,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.0",
-    "tailwindcss": "^4.3.3",
+    "tailwindcss": "^4.3.4",
     "typescript": "^7.0.2"
   },
   "lint-staged": {
